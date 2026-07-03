@@ -39,24 +39,41 @@ public class ApiClient {
     try {
       String boundary = "----Secondhand" + System.currentTimeMillis();
       String type = Files.probeContentType(file.toPath());
-      String head = "--" + boundary + "\r\nContent-Disposition: form-data; name=\"file\"; filename=\"" +
-        file.getName().replace("\"", "") + "\"\r\nContent-Type: " + type + "\r\n\r\n";
+      String head =
+        "--" +
+        boundary +
+        "\r\nContent-Disposition: form-data; name=\"file\"; filename=\"" +
+        file.getName().replace("\"", "") +
+        "\"\r\nContent-Type: " +
+        type +
+        "\r\n\r\n";
       String tail = "\r\n--" + boundary + "--\r\n";
       HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.concat(
         HttpRequest.BodyPublishers.ofString(head),
         HttpRequest.BodyPublishers.ofFile(file.toPath()),
         HttpRequest.BodyPublishers.ofString(tail)
       );
-      HttpRequest request = HttpRequest.newBuilder(URI.create(ApiConfig.BASE_URL + "/api/images/upload"))
+      HttpRequest request = HttpRequest.newBuilder(
+        URI.create(ApiConfig.BASE_URL + "/api/images/upload")
+      )
         .timeout(Duration.ofSeconds(30))
         .header("Content-Type", "multipart/form-data; boundary=" + boundary)
         .header("Authorization", "Bearer " + SessionManager.token())
-        .POST(body).build();
-      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        .POST(body)
+        .build();
+      HttpResponse<String> response = client.send(
+        request,
+        HttpResponse.BodyHandlers.ofString()
+      );
       if (response.statusCode() < 200 || response.statusCode() >= 300) {
         String message;
-        try { message = JSON.readTree(response.body()).path("message").asText("Image upload failed"); }
-        catch (Exception ignored) { message = "Image upload failed"; }
+        try {
+          message = JSON.readTree(response.body())
+            .path("message")
+            .asText("Image upload failed");
+        } catch (Exception ignored) {
+          message = "Image upload failed";
+        }
         throw new ApiException(message);
       }
       return JSON.readTree(response.body());
