@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.RegisterController" styleClass="auth-background">
+ <VBox maxWidth="540" spacing="13" styleClass="surface-panel">
+  <padding><Insets top="38" right="48" bottom="38" left="48"/></padding>
+  <Label text="Join the marketplace" styleClass="page-title"/><Label text="A few details and you are ready to browse." styleClass="muted"/>
+  <Label text="Full name" styleClass="field-label"/><TextField fx:id="fullNameField" promptText="Your full name"/>
+  <Label text="Username" styleClass="field-label"/><TextField fx:id="usernameField" promptText="Choose a unique username"/>
+  <Label text="Password" styleClass="field-label"/><PasswordField fx:id="passwordField" promptText="At least 6 characters"/>
+  <Label text="Phone number" styleClass="field-label"/><TextField fx:id="phoneField" promptText="Optional contact number"/>
+  <Label fx:id="errorLabel" styleClass="error-text" wrapText="true"/>
+  <Button text="Create account" onAction="#submit" maxWidth="Infinity" styleClass="primary-button"/>
+  <Button text="Back to sign in" onAction="#back" maxWidth="Infinity" styleClass="secondary-button"/>
+ </VBox>
+</StackPane>

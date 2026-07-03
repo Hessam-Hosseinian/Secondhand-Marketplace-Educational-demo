@@ -1,0 +1,17 @@
+{
+  "name": "java_proj",
+  "version": "1.0.0",
+  "description": "A client-server desktop marketplace. The Spring Boot backend owns the SQLite database and exposes a JWT-secured REST API; the JavaFX desktop client communicates only through HTTP.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "prettier": "3.9.4",
+    "prettier-plugin-java": "2.10.2"
+  }
+}

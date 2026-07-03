@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.AdDetailsController">
+ <top><HBox alignment="CENTER_LEFT" styleClass="topbar"><padding><Insets top="14" right="28" bottom="14" left="28"/></padding><Button text="← Back" onAction="#back" styleClass="ghost-button"/><Region HBox.hgrow="ALWAYS"/><Label text="Listing details" styleClass="brand"/></HBox></top>
+ <center><ScrollPane fitToWidth="true"><VBox alignment="TOP_CENTER"><padding><Insets top="28" right="28" bottom="40" left="28"/></padding>
+  <HBox maxWidth="1060" spacing="28" styleClass="details-shell">
+   <VBox prefWidth="680"><ImageView fx:id="imageView" fitWidth="680" fitHeight="410" preserveRatio="false" styleClass="detail-image"/></VBox>
+   <VBox spacing="13" prefWidth="340"><Label fx:id="metaLabel" styleClass="eyebrow"/><Label fx:id="titleLabel" wrapText="true" styleClass="details-title"/><Label fx:id="priceLabel" styleClass="price-large"/>
+    <HBox spacing="7"><Label text="Condition" styleClass="muted"/><Label fx:id="conditionLabel" styleClass="status-chip"/></HBox>
+    <Separator/><Label text="Seller" styleClass="field-label"/><Label fx:id="sellerLabel" styleClass="card-title"/><Label fx:id="ratingLabel" styleClass="rating"/><Label fx:id="dateLabel" styleClass="muted"/>
+    <Region prefHeight="8"/><Button fx:id="messageButton" text="Message seller" onAction="#message" maxWidth="Infinity" styleClass="primary-button"/>
+    <Button fx:id="favoriteButton" text="Save to favorites" onAction="#favorite" maxWidth="Infinity" styleClass="secondary-button"/>
+    <Button fx:id="ratingButton" text="Rate this seller" onAction="#rate" maxWidth="Infinity" styleClass="ghost-button"/>
+   </VBox>
+  </HBox>
+  <VBox maxWidth="1060" spacing="10" styleClass="content-panel"><Label text="About this item" styleClass="section-title"/><Label fx:id="descriptionLabel" wrapText="true" styleClass="body-copy"/><Label text="Additional details" styleClass="field-label"/><Label fx:id="attributesLabel" wrapText="true" styleClass="body-copy"/></VBox>
+ </VBox></ScrollPane></center>
+</BorderPane>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.MainAdsController">
+ <top><VBox>
+  <HBox alignment="CENTER_LEFT" spacing="10" styleClass="topbar"><padding><Insets top="14" right="28" bottom="14" left="28"/></padding>
+   <Label text="secondhand" styleClass="brand"/><Label text="MARKET" styleClass="brand-chip"/><Region HBox.hgrow="ALWAYS"/>
+   <Button text="Create ad" onAction="#create" styleClass="primary-button"/><Button text="My ads" onAction="#myAds" styleClass="nav-button"/>
+   <Button text="Favorites" onAction="#favorites" styleClass="nav-button"/><Button text="Messages" onAction="#conversations" styleClass="nav-button"/>
+   <Button fx:id="adminButton" text="Admin" onAction="#admin" styleClass="nav-button"/><Separator orientation="VERTICAL"/>
+   <Label fx:id="userLabel" styleClass="user-label"/><Button text="Log out" onAction="#logout" styleClass="ghost-button"/>
+  </HBox>
+  <VBox spacing="9" styleClass="search-band"><padding><Insets top="25" right="34" bottom="25" left="34"/></padding>
+   <Label text="Find your next great find" styleClass="section-title"/>
+   <HBox spacing="9"><TextField fx:id="keywordField" promptText="What are you looking for?" HBox.hgrow="ALWAYS" onAction="#search"/>
+    <ComboBox fx:id="categoryBox" prefWidth="160"/><ComboBox fx:id="cityBox" prefWidth="135"/><TextField fx:id="minPriceField" promptText="Min price" prefWidth="110"/>
+    <TextField fx:id="maxPriceField" promptText="Max price" prefWidth="110"/><ComboBox fx:id="conditionBox" prefWidth="130"/><ComboBox fx:id="sortBox" prefWidth="110"/>
+    <Button text="Search" onAction="#search" styleClass="accent-button"/>
+   </HBox>
+  </VBox>
+ </VBox></top>
+ <center><ScrollPane fitToWidth="true"><VBox spacing="17"><padding><Insets top="24" right="30" bottom="35" left="30"/></padding>
+  <HBox><Label text="Fresh listings" styleClass="section-title"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="resultLabel" styleClass="muted"/></HBox>
+  <TilePane fx:id="adsPane" hgap="18" vgap="18" prefColumns="3"/>
+ </VBox></ScrollPane></center>
+</BorderPane>

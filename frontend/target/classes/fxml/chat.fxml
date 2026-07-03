@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.ChatController">
+ <top><HBox alignment="CENTER_LEFT" spacing="10" styleClass="topbar"><padding><Insets top="14" right="28" bottom="14" left="28"/></padding><Button text="← Conversations" onAction="#back" styleClass="ghost-button"/><Region HBox.hgrow="ALWAYS"/><Label text="Conversation" styleClass="brand"/><Button text="Refresh" onAction="#refresh" styleClass="secondary-button"/></HBox></top>
+ <center><ScrollPane fx:id="scrollPane" fitToWidth="true"><VBox fx:id="messagesBox" spacing="16"><padding><Insets top="28" right="90" bottom="28" left="90"/></padding></VBox></ScrollPane></center>
+ <bottom><HBox spacing="10" styleClass="composer"><padding><Insets top="16" right="28" bottom="18" left="28"/></padding><TextField fx:id="messageField" promptText="Write a message…" onAction="#send" HBox.hgrow="ALWAYS"/><Button text="Send" onAction="#send" styleClass="primary-button"/></HBox></bottom>
+</BorderPane>

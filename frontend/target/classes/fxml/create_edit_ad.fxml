@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.CreateEditAdController">
+ <top><HBox alignment="CENTER_LEFT" styleClass="topbar"><padding><Insets top="14" right="28" bottom="14" left="28"/></padding><Button text="← Cancel" onAction="#cancel" styleClass="ghost-button"/><Region HBox.hgrow="ALWAYS"/><Label text="secondhand" styleClass="brand"/></HBox></top>
+ <center><ScrollPane fitToWidth="true"><VBox alignment="TOP_CENTER"><padding><Insets top="28" right="24" bottom="42" left="24"/></padding>
+  <VBox maxWidth="780" spacing="14" styleClass="surface-panel"><Label fx:id="headingLabel" text="Create an advertisement" styleClass="page-title"/><Label text="Add honest details and a clear photo. Every new listing is reviewed before publishing." wrapText="true" styleClass="muted"/>
+   <Label text="Title *" styleClass="field-label"/><TextField fx:id="titleField" promptText="A short, descriptive title"/>
+   <Label text="Description *" styleClass="field-label"/><TextArea fx:id="descriptionArea" promptText="Condition, age, reason for selling…" prefRowCount="5" wrapText="true"/>
+   <HBox spacing="12"><VBox spacing="7" HBox.hgrow="ALWAYS"><Label text="Price (IRR) *" styleClass="field-label"/><TextField fx:id="priceField" promptText="0"/></VBox><VBox spacing="7" HBox.hgrow="ALWAYS"><Label text="Condition *" styleClass="field-label"/><ComboBox fx:id="conditionBox" maxWidth="Infinity"/></VBox></HBox>
+   <HBox spacing="12"><VBox spacing="7" HBox.hgrow="ALWAYS"><Label text="Main category *" styleClass="field-label"/><ComboBox fx:id="mainCategoryBox" onAction="#mainChanged" maxWidth="Infinity"/></VBox><VBox spacing="7" HBox.hgrow="ALWAYS"><Label text="Subcategory *" styleClass="field-label"/><ComboBox fx:id="subcategoryBox" maxWidth="Infinity"/></VBox><VBox spacing="7" HBox.hgrow="ALWAYS"><Label text="City *" styleClass="field-label"/><ComboBox fx:id="cityBox" maxWidth="Infinity"/></VBox></HBox>
+   <Label text="Product image" styleClass="field-label"/><HBox spacing="10"><TextField fx:id="imageUrlField" promptText="Choose an image from your laptop" editable="false" HBox.hgrow="ALWAYS"/><Button text="Choose image…" onAction="#chooseImage" styleClass="secondary-button"/></HBox>
+   <Label text="Additional attributes" styleClass="field-label"/><TextArea fx:id="attributesArea" promptText="Color, dimensions, included accessories…" prefRowCount="3" wrapText="true"/>
+   <Label fx:id="errorLabel" styleClass="error-text"/><HBox alignment="CENTER_RIGHT" spacing="10"><Button text="Cancel" onAction="#cancel" styleClass="secondary-button"/><Button text="Submit for review" onAction="#submit" styleClass="primary-button"/></HBox>
+  </VBox>
+ </VBox></ScrollPane></center>
+</BorderPane>
