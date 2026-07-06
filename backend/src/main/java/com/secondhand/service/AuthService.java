@@ -2,6 +2,7 @@ package com.secondhand.service;
 
 import com.secondhand.dto.ApiDtos.*;
 import com.secondhand.entity.*;
+import com.secondhand.entity.account.CustomerUser;
 import com.secondhand.exception.ApiException;
 import com.secondhand.repository.UserRepository;
 import com.secondhand.security.JwtService;
@@ -27,11 +28,18 @@ public class AuthService {
     if (
       users.existsByUsernameIgnoreCase(r.username())
     ) throw ApiException.conflict("Username already exists");
-    User u = new User();
+    if (users.existsByPhoneNumber(r.phoneNumber())) throw ApiException.conflict(
+      "Phone number already exists"
+    );
+    if (users.existsByEmailIgnoreCase(r.email())) throw ApiException.conflict(
+      "Email already exists"
+    );
+    User u = new CustomerUser();
     u.setFullName(r.fullName().trim());
     u.setUsername(r.username().trim());
     u.setPasswordHash(encoder.encode(r.password()));
     u.setPhoneNumber(r.phoneNumber());
+    u.setEmail(r.email().trim().toLowerCase());
     return response(users.save(u));
   }
 

@@ -13,7 +13,8 @@ public final class ApiDtos {
     @NotBlank String fullName,
     @NotBlank String username,
     @Size(min = 6) String password,
-    String phoneNumber
+    @NotBlank String phoneNumber,
+    @NotBlank @Email String email
   ) {}
 
   public record LoginRequest(
@@ -35,7 +36,8 @@ public final class ApiDtos {
     String name,
     Long parentId,
     String parentName,
-    boolean active
+    boolean active,
+    String categoryType
   ) {}
 
   public record CityDto(
@@ -43,6 +45,16 @@ public final class ApiDtos {
     String name,
     String province,
     boolean active
+  ) {}
+
+  public record CategoryAttributeDto(
+    Long id,
+    String key,
+    String label,
+    String inputType,
+    List<String> options,
+    boolean required,
+    int sortOrder
   ) {}
 
   public record AdRequest(
@@ -53,11 +65,14 @@ public final class ApiDtos {
     @NotNull Long categoryId,
     @NotNull Long cityId,
     String attributesText,
-    String imageUrl
+    Map<String, String> attributes,
+    String imageUrl,
+    List<String> imageUrls
   ) {}
 
   public record AdDto(
     Long id,
+    String productType,
     String title,
     String description,
     BigDecimal price,
@@ -71,9 +86,11 @@ public final class ApiDtos {
     Long cityId,
     String cityName,
     String attributesText,
+    Map<String, String> attributes,
     String rejectionReason,
     List<String> imageUrls,
     Double sellerAverageRating,
+    long sellerRatingCount,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
   ) {}
@@ -97,6 +114,7 @@ public final class ApiDtos {
     Long sellerId,
     String sellerName,
     String lastMessage,
+    LocalDateTime lastMessageAt,
     LocalDateTime createdAt
   ) {}
 
@@ -121,8 +139,10 @@ public final class ApiDtos {
     String fullName,
     String username,
     String phoneNumber,
+    String email,
     String role,
     String status,
+    String accountType,
     LocalDateTime createdAt
   ) {}
 

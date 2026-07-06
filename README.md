@@ -227,8 +227,8 @@ APP_UPLOAD_DIR=/custom/path/uploads
 
 The demo database includes:
 
-- 2 hierarchical main categories
-- 4 subcategories
+- 7 hierarchical main categories
+- 12 subcategories
 - 6 Iranian cities
 - 16 advertisements
 - 5 cars
@@ -250,7 +250,29 @@ Main category hierarchy:
 وسایل الکترونیکی
 ├── گوشی
 └── لپ‌تاپ
+
+خانه و آشپزخانه
+├── مبلمان
+└── لوازم خانگی
+
+مد و پوشاک
+├── لباس
+└── کیف و کفش
+
+ورزش و سرگرمی
+├── دوچرخه
+└── کنسول بازی
+
+ابزار و تجهیزات
+└── ابزار صنعتی
+
+کتاب و آموزش
+└── کتاب
 ```
+
+Each product category can define its own structured fields, such as brand,
+storage, RAM, model year, size, material, author, or publisher. The JavaFX
+advertisement form loads these fields dynamically from the backend.
 
 ## Demo accounts
 

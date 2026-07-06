@@ -24,7 +24,7 @@ public class LoginController extends BaseController {
       if (
         usernameField.getText().isBlank() || passwordField.getText().isBlank()
       ) {
-        errorLabel.setText("Please enter your username and password.");
+        errorLabel.setText("Enter your username and password.");
         return;
       }
       SessionManager.login(
@@ -45,5 +45,10 @@ public class LoginController extends BaseController {
   @FXML
   private void register() {
     NavigationManager.register();
+  }
+
+  @FXML
+  private void browse() {
+    NavigationManager.mainAds();
   }
 }

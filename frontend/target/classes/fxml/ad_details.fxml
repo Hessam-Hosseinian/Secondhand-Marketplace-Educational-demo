@@ -2,20 +2,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.AdDetailsController">
- <top><HBox alignment="CENTER_LEFT" styleClass="topbar"><padding><Insets top="14" right="28" bottom="14" left="28"/></padding><Button text="← Back" onAction="#back" styleClass="ghost-button"/><Region HBox.hgrow="ALWAYS"/><Label text="Listing details" styleClass="brand"/></HBox></top>
- <center><ScrollPane fitToWidth="true"><VBox alignment="TOP_CENTER"><padding><Insets top="28" right="28" bottom="40" left="28"/></padding>
-  <HBox maxWidth="1060" spacing="28" styleClass="details-shell">
-   <VBox prefWidth="680"><ImageView fx:id="imageView" fitWidth="680" fitHeight="410" preserveRatio="false" styleClass="detail-image"/></VBox>
-   <VBox spacing="13" prefWidth="340"><Label fx:id="metaLabel" styleClass="eyebrow"/><Label fx:id="titleLabel" wrapText="true" styleClass="details-title"/><Label fx:id="priceLabel" styleClass="price-large"/>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.AdDetailsController" styleClass="page">
+ <top><HBox alignment="CENTER_LEFT" spacing="10" styleClass="app-header"><Button text="Back" onAction="#back" styleClass="ghost-button"/><Label text="RE:MARKET" styleClass="wordmark"/><Region HBox.hgrow="ALWAYS"/><Label text="Listing details" styleClass="muted"/></HBox></top>
+ <center><ScrollPane fitToWidth="true"><VBox alignment="TOP_CENTER" spacing="18" styleClass="details-layout">
+  <HBox maxWidth="1080" spacing="24">
+   <VBox prefWidth="680" styleClass="details-image-panel"><ImageView fx:id="imageView" fitWidth="656" fitHeight="410" preserveRatio="false" styleClass="detail-image"/></VBox>
+   <VBox prefWidth="370" spacing="12" styleClass="surface">
+    <Label fx:id="metaLabel" wrapText="true" styleClass="eyebrow"/><Label fx:id="titleLabel" maxWidth="330" wrapText="true" styleClass="details-title"/><Label fx:id="priceLabel" styleClass="price-large"/>
     <HBox spacing="7"><Label text="Condition" styleClass="muted"/><Label fx:id="conditionLabel" styleClass="status-chip"/></HBox>
     <Separator/><Label text="Seller" styleClass="field-label"/><Label fx:id="sellerLabel" styleClass="card-title"/><Label fx:id="ratingLabel" styleClass="rating"/><Label fx:id="dateLabel" styleClass="muted"/>
-    <Region prefHeight="8"/><Button fx:id="messageButton" text="Message seller" onAction="#message" maxWidth="Infinity" styleClass="primary-button"/>
-    <Button fx:id="favoriteButton" text="Save to favorites" onAction="#favorite" maxWidth="Infinity" styleClass="secondary-button"/>
-    <Button fx:id="ratingButton" text="Rate this seller" onAction="#rate" maxWidth="Infinity" styleClass="ghost-button"/>
+    <Region prefHeight="5"/><Button fx:id="messageButton" text="Message seller" onAction="#message" maxWidth="Infinity" styleClass="primary-button"/>
+    <Button fx:id="favoriteButton" text="Save listing" onAction="#favorite" maxWidth="Infinity" styleClass="secondary-button"/>
+    <Button fx:id="ratingButton" text="Rate seller" onAction="#rate" maxWidth="Infinity" styleClass="ghost-button"/>
+    <VBox fx:id="ownerActions" spacing="8"><Separator/><Label text="Manage this listing" styleClass="field-label"/><Button text="Edit listing" onAction="#edit" maxWidth="Infinity" styleClass="secondary-button"/><Button text="Mark as sold" onAction="#sold" maxWidth="Infinity" styleClass="primary-button"/><Button text="Delete listing" onAction="#delete" maxWidth="Infinity" styleClass="danger-button"/></VBox>
    </VBox>
   </HBox>
-  <VBox maxWidth="1060" spacing="10" styleClass="content-panel"><Label text="About this item" styleClass="section-title"/><Label fx:id="descriptionLabel" wrapText="true" styleClass="body-copy"/><Label text="Additional details" styleClass="field-label"/><Label fx:id="attributesLabel" wrapText="true" styleClass="body-copy"/></VBox>
+  <VBox maxWidth="1080" spacing="10" styleClass="surface"><Label text="About this item" styleClass="section-title"/><Label fx:id="descriptionLabel" maxWidth="1020" wrapText="true" styleClass="body-copy"/><Separator/><Label text="Item details" styleClass="section-title"/><Label fx:id="attributesLabel" maxWidth="1020" wrapText="true" styleClass="body-copy"/></VBox>
  </VBox></ScrollPane></center>
 </BorderPane>

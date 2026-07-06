@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 public class RegisterController extends BaseController {
 
   @FXML
-  private TextField fullNameField, usernameField, phoneField;
+  private TextField fullNameField, usernameField, phoneField, emailField;
 
   @FXML
   private PasswordField passwordField;
@@ -24,10 +24,12 @@ public class RegisterController extends BaseController {
       if (
         fullNameField.getText().isBlank() ||
         usernameField.getText().isBlank() ||
+        emailField.getText().isBlank() ||
+        phoneField.getText().isBlank() ||
         passwordField.getText().length() < 6
       ) {
         errorLabel.setText(
-          "Complete the required fields; password must have 6 characters."
+          "Complete every field. Password must contain at least 6 characters."
         );
         return;
       }
@@ -36,6 +38,7 @@ public class RegisterController extends BaseController {
       body.put("username", usernameField.getText());
       body.put("password", passwordField.getText());
       body.put("phoneNumber", phoneField.getText());
+      body.put("email", emailField.getText());
       SessionManager.login(api.post("/api/auth/register", body));
       NavigationManager.mainAds();
     });

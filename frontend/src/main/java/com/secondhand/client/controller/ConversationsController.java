@@ -42,7 +42,7 @@ public class ConversationsController extends BaseController {
           .addAll(
             details,
             UiFactory.spacer(),
-            UiFactory.action("Open chat", () -> NavigationManager.chat(id))
+            UiFactory.action("Open", () -> NavigationManager.chat(id))
           );
         listBox.getChildren().add(row);
       }

@@ -38,7 +38,7 @@ public class FavoritesController extends BaseController {
             )
           ),
           UiFactory.spacer(),
-          UiFactory.action("Open", () -> NavigationManager.details(id)),
+          UiFactory.action("View", () -> NavigationManager.details(id)),
           UiFactory.action("Remove", () ->
             safe(() -> {
               api.delete("/api/favorites/" + id);

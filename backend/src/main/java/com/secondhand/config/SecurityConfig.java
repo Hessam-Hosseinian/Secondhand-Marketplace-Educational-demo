@@ -2,6 +2,7 @@ package com.secondhand.config;
 
 import com.secondhand.security.JwtFilter;
 import jakarta.servlet.http.HttpServletResponse;
+import java.nio.charset.StandardCharsets;
 import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,6 +37,7 @@ public class SecurityConfig {
             "/api/ads",
             "/api/ads/*",
             "/api/categories",
+            "/api/categories/*/attributes",
             "/api/cities",
             "/api/users/*/ratings",
             "/uploads/**"
@@ -51,6 +53,7 @@ public class SecurityConfig {
           .authenticationEntryPoint((q, r, x) -> {
             r.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             r.setContentType("application/json");
+            r.setCharacterEncoding(StandardCharsets.UTF_8.name());
             r.getWriter().write(
               "{\"message\":\"Authentication required\",\"status\":401}"
             );
@@ -58,6 +61,7 @@ public class SecurityConfig {
           .accessDeniedHandler((q, r, x) -> {
             r.setStatus(403);
             r.setContentType("application/json");
+            r.setCharacterEncoding(StandardCharsets.UTF_8.name());
             r.getWriter().write(
               "{\"message\":\"Access denied\",\"status\":403}"
             );

@@ -24,7 +24,7 @@ public class MyAdsController extends BaseController {
   private void refresh() {
     safe(() -> {
       JsonNode ads = api.get("/api/my/ads");
-      countLabel.setText(ads.size() + " advertisements");
+      countLabel.setText(ads.size() + (ads.size() == 1 ? " listing" : " listings"));
       listBox.getChildren().clear();
       for (JsonNode ad : ads) listBox.getChildren().add(row(ad));
     });
@@ -36,11 +36,11 @@ public class MyAdsController extends BaseController {
     VBox text = new VBox(
       5,
       UiFactory.title(ad.path("title").asText()),
-      new Label(UiFactory.price(ad) + "  ·  " + status)
+      new Label(UiFactory.price(ad) + "  ·  " + UiFactory.status(status))
     );
     if ("REJECTED".equals(status)) text
       .getChildren()
-      .add(new Label("Reason: " + ad.path("rejectionReason").asText()));
+      .add(new Label("Rejection reason: " + ad.path("rejectionReason").asText()));
     Button edit = UiFactory.action("Edit", () -> NavigationManager.adForm(ad));
     Button sold = UiFactory.action("Mark sold", () ->
       safe(() -> {
@@ -60,7 +60,7 @@ public class MyAdsController extends BaseController {
       UiFactory.action("Delete", () ->
         safe(() -> {
           api.delete("/api/ads/" + id);
-          DialogUtils.info("Advertisement deleted.");
+          DialogUtils.info("Listing deleted.");
           refresh();
         })
       )

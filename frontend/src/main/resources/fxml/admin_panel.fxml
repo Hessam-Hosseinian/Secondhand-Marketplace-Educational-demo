@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.AdminPanelController">
- <top><HBox alignment="CENTER_LEFT" styleClass="admin-topbar"><padding><Insets top="16" right="28" bottom="16" left="28"/></padding><Button text="← Marketplace" onAction="#back" styleClass="ghost-light-button"/><Region HBox.hgrow="ALWAYS"/><VBox alignment="CENTER_RIGHT"><Label text="ADMIN CONSOLE" styleClass="eyebrow-light"/><Label text="Marketplace operations" styleClass="admin-title"/></VBox></HBox></top>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.AdminPanelController" styleClass="page">
+ <top><HBox alignment="CENTER_LEFT" styleClass="admin-header"><Button text="Back to marketplace" onAction="#back" styleClass="ghost-light-button"/><Region HBox.hgrow="ALWAYS"/><Label text="Marketplace administration" styleClass="admin-title"/></HBox></top>
  <center><TabPane tabClosingPolicy="UNAVAILABLE" styleClass="admin-tabs">
   <tabs>
-   <Tab text="Pending review"><ScrollPane fitToWidth="true"><VBox spacing="14"><padding><Insets top="24" right="28" bottom="32" left="28"/></padding><Label text="Advertisements awaiting review" styleClass="section-title"/><Label text="Approve clear listings or leave an actionable rejection reason." styleClass="muted"/><VBox fx:id="pendingBox" spacing="10"/></VBox></ScrollPane></Tab>
-   <Tab text="Users"><ScrollPane fitToWidth="true"><VBox spacing="14"><padding><Insets top="24" right="28" bottom="32" left="28"/></padding><Label text="User accounts" styleClass="section-title"/><VBox fx:id="usersBox" spacing="10"/></VBox></ScrollPane></Tab>
-   <Tab text="Categories"><ScrollPane fitToWidth="true"><VBox spacing="14"><padding><Insets top="24" right="28" bottom="32" left="28"/></padding><Label text="Category hierarchy" styleClass="section-title"/><HBox spacing="10"><TextField fx:id="categoryNameField" promptText="Category name" HBox.hgrow="ALWAYS"/><ComboBox fx:id="parentCategoryBox" prefWidth="210"/><Button text="Add category" onAction="#addCategory" styleClass="primary-button"/></HBox><VBox fx:id="categoriesBox" spacing="8"/></VBox></ScrollPane></Tab>
-   <Tab text="Cities"><ScrollPane fitToWidth="true"><VBox spacing="14"><padding><Insets top="24" right="28" bottom="32" left="28"/></padding><Label text="Available cities" styleClass="section-title"/><HBox spacing="10"><TextField fx:id="cityNameField" promptText="City name" HBox.hgrow="ALWAYS"/><TextField fx:id="provinceField" promptText="Province" HBox.hgrow="ALWAYS"/><Button text="Add city" onAction="#addCity" styleClass="primary-button"/></HBox><VBox fx:id="citiesBox" spacing="8"/></VBox></ScrollPane></Tab>
+   <Tab text="Review queue"><ScrollPane fitToWidth="true"><VBox spacing="12" styleClass="page-content"><Label text="Listings awaiting review" styleClass="page-title"/><Label text="Approve complete listings or provide a clear rejection reason." styleClass="muted"/><VBox fx:id="pendingBox" spacing="10"/></VBox></ScrollPane></Tab>
+   <Tab text="Users"><ScrollPane fitToWidth="true"><VBox spacing="12" styleClass="page-content"><Label text="User accounts" styleClass="page-title"/><VBox fx:id="usersBox" spacing="10"/></VBox></ScrollPane></Tab>
+   <Tab text="Categories"><ScrollPane fitToWidth="true"><VBox spacing="12" styleClass="page-content"><Label text="Category structure" styleClass="page-title"/><HBox spacing="10"><TextField fx:id="categoryNameField" promptText="Category name" HBox.hgrow="ALWAYS"/><ComboBox fx:id="parentCategoryBox" prefWidth="220"/><Button text="Add category" onAction="#addCategory" styleClass="primary-button"/></HBox><VBox fx:id="categoriesBox" spacing="8"/></VBox></ScrollPane></Tab>
+   <Tab text="Cities"><ScrollPane fitToWidth="true"><VBox spacing="12" styleClass="page-content"><Label text="Service locations" styleClass="page-title"/><HBox spacing="10"><TextField fx:id="cityNameField" promptText="City" HBox.hgrow="ALWAYS"/><TextField fx:id="provinceField" promptText="Province" HBox.hgrow="ALWAYS"/><Button text="Add city" onAction="#addCity" styleClass="primary-button"/></HBox><VBox fx:id="citiesBox" spacing="8"/></VBox></ScrollPane></Tab>
   </tabs>
  </TabPane></center>
 </BorderPane>

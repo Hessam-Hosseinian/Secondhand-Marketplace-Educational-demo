@@ -16,4 +16,5 @@ public interface SellerRatingRepository
 
   @Query("select avg(r.rating) from SellerRating r where r.seller=?1")
   Double average(User s);
+  long countBySeller(User seller);
 }

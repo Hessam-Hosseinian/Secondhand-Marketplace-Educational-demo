@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.FavoritesController">
- <top><HBox alignment="CENTER_LEFT" styleClass="topbar"><padding><Insets top="14" right="28" bottom="14" left="28"/></padding><Button text="← Marketplace" onAction="#back" styleClass="ghost-button"/><Region HBox.hgrow="ALWAYS"/><Label text="Saved finds" styleClass="brand"/></HBox></top>
- <center><ScrollPane fitToWidth="true"><VBox spacing="16"><padding><Insets top="30" right="34" bottom="40" left="34"/></padding><Label text="Your favorites" styleClass="page-title"/><Label text="A quiet corner for the listings you want to revisit." styleClass="muted"/><Label fx:id="emptyLabel" text="Nothing saved yet. Browse the marketplace and tap “Save to favorites”." styleClass="empty-state"/><VBox fx:id="listBox" spacing="12"/></VBox></ScrollPane></center>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.FavoritesController" styleClass="page">
+ <top><HBox alignment="CENTER_LEFT" styleClass="app-header"><Button text="Back" onAction="#back" styleClass="ghost-button"/><Region HBox.hgrow="ALWAYS"/><Label text="Saved listings" styleClass="wordmark"/></HBox></top>
+ <center><ScrollPane fitToWidth="true"><VBox spacing="14" styleClass="page-content"><Label text="Saved for later" styleClass="page-title"/><Label text="Keep a shortlist while you compare your options." styleClass="muted"/><Label fx:id="emptyLabel" text="You have not saved any listings yet." styleClass="empty-state"/><VBox fx:id="listBox" spacing="10"/></VBox></ScrollPane></center>
 </BorderPane>

@@ -45,7 +45,7 @@ public class RatingDialogController extends BaseController {
           commentArea.getText()
         )
       );
-      DialogUtils.info("Thanks! Your rating was submitted.");
+      DialogUtils.info("Thanks. Your rating was submitted.");
       stage.close();
     });
   }

@@ -8,6 +8,7 @@ import java.util.Map;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 
 public class AdDetailsController extends BaseController {
 
@@ -22,6 +23,9 @@ public class AdDetailsController extends BaseController {
 
   @FXML
   private Button favoriteButton, messageButton, ratingButton;
+
+  @FXML
+  private VBox ownerActions;
 
   private JsonNode ad;
   private boolean adminMode;
@@ -40,23 +44,41 @@ public class AdDetailsController extends BaseController {
           ad.path("cityName").asText()
       );
       conditionLabel.setText(
-        ad.path("itemCondition").asText().replace('_', ' ')
+        UiFactory.condition(ad.path("itemCondition").asText())
       );
       sellerLabel.setText(ad.path("ownerName").asText());
       double rating = ad.path("sellerAverageRating").asDouble(0);
       ratingLabel.setText(
-        rating == 0 ? "No ratings yet" : "★ " + String.format("%.1f", rating)
+        rating == 0
+          ? "No ratings yet"
+          : "★ " + String.format("%.1f", rating) + "  ·  " +
+            ad.path("sellerRatingCount").asLong() + " reviews"
       );
       dateLabel.setText(ad.path("createdAt").asText().replace('T', ' '));
       descriptionLabel.setText(ad.path("description").asText());
-      attributesLabel.setText(ad.path("attributesText").asText(""));
+      StringBuilder attributes = new StringBuilder();
+      ad.path("attributes").fields().forEachRemaining(entry ->
+        attributes.append(entry.getKey()).append(": ")
+          .append(entry.getValue().asText()).append("\n")
+      );
+      if (!ad.path("attributesText").asText("").isBlank()) {
+        attributes.append(ad.path("attributesText").asText());
+      }
+      attributesLabel.setText(
+        attributes.isEmpty() ? "No additional details provided." : attributes.toString()
+      );
       imageView.setImage(
         UiFactory.image(UiFactory.firstImage(ad), 720, 390).getImage()
       );
       boolean own = ad.path("ownerId").asLong() == SessionManager.userId();
-      favoriteButton.setDisable(own || admin);
-      messageButton.setDisable(own || admin);
-      ratingButton.setDisable(own || admin);
+      favoriteButton.setVisible(!own && !admin);
+      favoriteButton.setManaged(!own && !admin);
+      messageButton.setVisible(!own && !admin);
+      messageButton.setManaged(!own && !admin);
+      ratingButton.setVisible(!own && !admin);
+      ratingButton.setManaged(!own && !admin);
+      ownerActions.setVisible(own && !admin);
+      ownerActions.setManaged(own && !admin);
     });
   }
 
@@ -68,15 +90,17 @@ public class AdDetailsController extends BaseController {
 
   @FXML
   private void favorite() {
+    if (!NavigationManager.requireLogin()) return;
     safe(() -> {
       api.post("/api/favorites/" + ad.path("id").asLong(), Map.of());
-      DialogUtils.info("Saved to your favorites.");
+      DialogUtils.info("Listing saved.");
       favoriteButton.setDisable(true);
     });
   }
 
   @FXML
   private void message() {
+    if (!NavigationManager.requireLogin()) return;
     safe(() -> {
       JsonNode c = api.post(
         "/api/conversations?adId=" + ad.path("id").asLong(),
@@ -89,5 +113,28 @@ public class AdDetailsController extends BaseController {
   @FXML
   private void rate() {
     NavigationManager.rating(ad);
+  }
+
+  @FXML
+  private void edit() {
+    NavigationManager.adForm(ad);
+  }
+
+  @FXML
+  private void sold() {
+    safe(() -> {
+      api.put("/api/ads/" + ad.path("id").asLong() + "/sold", Map.of());
+      DialogUtils.info("Listing marked as sold.");
+      NavigationManager.myAds();
+    });
+  }
+
+  @FXML
+  private void delete() {
+    safe(() -> {
+      api.delete("/api/ads/" + ad.path("id").asLong());
+      DialogUtils.info("Listing deleted.");
+      NavigationManager.myAds();
+    });
   }
 }

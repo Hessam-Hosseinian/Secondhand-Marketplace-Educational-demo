@@ -17,17 +17,23 @@ public class AdService {
   private final CategoryRepository cats;
   private final CityRepository cities;
   private final MapperService mapper;
+  private final CategoryAttributeRepository categoryAttributes;
+  private final ProductFactory products;
 
   public AdService(
     AdvertisementRepository a,
     CategoryRepository c,
     CityRepository ci,
-    MapperService m
+    MapperService m,
+    CategoryAttributeRepository ca,
+    ProductFactory products
   ) {
     ads = a;
     cats = c;
     cities = ci;
     mapper = m;
+    categoryAttributes = ca;
+    this.products = products;
   }
 
   @Transactional(readOnly = true)
@@ -65,8 +71,9 @@ public class AdService {
 
   @Transactional
   public AdDto create(User owner, AdRequest r) {
-    Advertisement a = new Advertisement();
-    apply(a, r);
+    Category category = activeCategory(r.categoryId());
+    Advertisement a = products.create(category, r.attributes());
+    apply(a, r, category);
     a.setOwner(owner);
     a.setStatus(Enums.AdStatus.PENDING);
     return mapper.ad(ads.save(a));
@@ -79,7 +86,7 @@ public class AdService {
       a.getStatus() == Enums.AdStatus.DELETED ||
       a.getStatus() == Enums.AdStatus.SOLD
     ) throw ApiException.bad("This advertisement cannot be edited");
-    apply(a, r);
+    apply(a, r, activeCategory(r.categoryId()));
     a.setStatus(Enums.AdStatus.PENDING);
     a.setRejectionReason(null);
     return mapper.ad(a);
@@ -124,11 +131,7 @@ public class AdService {
     return a;
   }
 
-  private void apply(Advertisement a, AdRequest r) {
-    Category c = cats
-      .findById(r.categoryId())
-      .filter(Category::isActive)
-      .orElseThrow(() -> ApiException.bad("Invalid category"));
+  private void apply(Advertisement a, AdRequest r, Category c) {
     City city = cities
       .findById(r.cityId())
       .filter(City::isActive)
@@ -140,12 +143,59 @@ public class AdService {
     a.setCategory(c);
     a.setCity(city);
     a.setAttributesText(r.attributesText());
-    if (r.imageUrl() != null && !r.imageUrl().isBlank()) {
+    applyAttributes(a, c, r.attributes());
+    List<String> imageUrls = r.imageUrls() == null
+      ? List.of()
+      : r.imageUrls().stream().filter(x -> x != null && !x.isBlank()).toList();
+    if (imageUrls.isEmpty() && r.imageUrl() != null && !r.imageUrl().isBlank()) {
+      imageUrls = List.of(r.imageUrl());
+    }
+    if (!imageUrls.isEmpty()) {
       a.getImages().clear();
-      AdvertisementImage i = new AdvertisementImage();
-      i.setAdvertisement(a);
-      i.setImageUrl(r.imageUrl().trim());
-      a.getImages().add(i);
+      for (int order = 0; order < imageUrls.size(); order++) {
+        AdvertisementImage image = new AdvertisementImage();
+        image.setAdvertisement(a);
+        image.setImageUrl(imageUrls.get(order).trim());
+        image.setSortOrder(order);
+        a.getImages().add(image);
+      }
+    }
+  }
+
+  private Category activeCategory(Long id) {
+    return cats.findById(id)
+      .filter(Category::isActive)
+      .orElseThrow(() -> ApiException.bad("Invalid category"));
+  }
+
+  private void applyAttributes(
+    Advertisement ad,
+    Category category,
+    Map<String, String> values
+  ) {
+    Map<String, String> safeValues = values == null ? Map.of() : values;
+    List<CategoryAttribute> definitions =
+      categoryAttributes.findByCategoryIdOrderBySortOrder(category.getId());
+    for (CategoryAttribute definition : definitions) {
+      String value = safeValues
+        .getOrDefault(definition.getAttributeKey(), "")
+        .trim();
+      if (definition.isRequired() && value.isBlank()) throw ApiException.bad(
+        "مقدار «" + definition.getLabel() + "» الزامی است"
+      );
+    }
+    ad.getAttributes().clear();
+    for (CategoryAttribute definition : definitions) {
+      String value = safeValues
+        .getOrDefault(definition.getAttributeKey(), "")
+        .trim();
+      if (value.isBlank()) continue;
+      AdvertisementAttribute attribute = new AdvertisementAttribute();
+      attribute.setAdvertisement(ad);
+      attribute.setAttributeKey(definition.getAttributeKey());
+      attribute.setLabel(definition.getLabel());
+      attribute.setValue(value);
+      ad.getAttributes().add(attribute);
     }
   }
 

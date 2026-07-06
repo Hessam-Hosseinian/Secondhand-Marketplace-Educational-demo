@@ -8,7 +8,7 @@ public class MainApp extends Application {
   @Override
   public void start(Stage stage) {
     NavigationManager.initialize(stage);
-    NavigationManager.login();
+    NavigationManager.mainAds();
     stage.show();
   }
 

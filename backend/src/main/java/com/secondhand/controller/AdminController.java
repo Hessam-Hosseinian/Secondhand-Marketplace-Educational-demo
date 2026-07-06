@@ -22,6 +22,7 @@ public class AdminController {
   private final AdminReviewRepository reviews;
   private final MapperService mapper;
   private final CurrentUser current;
+  private final CategoryFactory categoryFactory;
 
   public AdminController(
     AdvertisementRepository a,
@@ -30,7 +31,8 @@ public class AdminController {
     CityRepository ci,
     AdminReviewRepository r,
     MapperService m,
-    CurrentUser cu
+    CurrentUser cu,
+    CategoryFactory categoryFactory
   ) {
     ads = a;
     users = u;
@@ -39,6 +41,7 @@ public class AdminController {
     reviews = r;
     mapper = m;
     current = cu;
+    this.categoryFactory = categoryFactory;
   }
 
   private Advertisement ad(Long id) {
@@ -128,7 +131,11 @@ public class AdminController {
   @PostMapping("/categories")
   @Transactional
   public CategoryDto addCat(@Valid @RequestBody NameRequest r) {
-    Category c = new Category();
+    Category parent = r.parentId() == null
+      ? null
+      : cats.findById(r.parentId())
+        .orElseThrow(() -> ApiException.bad("Invalid parent category"));
+    Category c = categoryFactory.create(r.name(), parent);
     catApply(c, r);
     return mapper.category(cats.save(c));
   }

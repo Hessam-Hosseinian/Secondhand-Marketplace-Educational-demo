@@ -119,6 +119,7 @@ public class InteractionController {
     if (a.getOwner().getId().equals(u.getId())) throw ApiException.bad(
       "You cannot message yourself"
     );
+    ensureActive(a.getOwner());
     Conversation c = conversations
       .findByBuyerAndAdvertisement(u, a)
       .orElseGet(() -> {
@@ -160,6 +161,8 @@ public class InteractionController {
   ) {
     User u = current.get(a);
     Conversation c = conversation(u, id);
+    ensureActive(c.getBuyer());
+    ensureActive(c.getSeller());
     Message m = new Message();
     m.setConversation(c);
     m.setSender(u);
@@ -216,12 +219,9 @@ public class InteractionController {
   }
 
   private ConversationDto conv(Conversation c) {
-    String last = c.getMessages().isEmpty()
+    Message lastMessage = c.getMessages().isEmpty()
       ? null
-      : c
-          .getMessages()
-          .get(c.getMessages().size() - 1)
-          .getContent();
+      : c.getMessages().get(c.getMessages().size() - 1);
     return new ConversationDto(
       c.getId(),
       c.getAdvertisement().getId(),
@@ -230,8 +230,15 @@ public class InteractionController {
       c.getBuyer().getFullName(),
       c.getSeller().getId(),
       c.getSeller().getFullName(),
-      last,
+      lastMessage == null ? null : lastMessage.getContent(),
+      lastMessage == null ? null : lastMessage.getCreatedAt(),
       c.getCreatedAt()
+    );
+  }
+
+  private void ensureActive(User user) {
+    if (user.getStatus() != Enums.UserStatus.ACTIVE) throw ApiException.forbidden(
+      "Messages are unavailable because a participant is blocked"
     );
   }
 

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.MyAdsController">
- <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="topbar"><padding><Insets top="14" right="28" bottom="14" left="28"/></padding><Button text="← Marketplace" onAction="#back" styleClass="ghost-button"/><Region HBox.hgrow="ALWAYS"/><Button text="+ Create ad" onAction="#create" styleClass="primary-button"/></HBox></top>
- <center><ScrollPane fitToWidth="true"><VBox spacing="16"><padding><Insets top="28" right="34" bottom="40" left="34"/></padding><HBox><VBox><Label text="My advertisements" styleClass="page-title"/><Label text="Manage listings and follow their review status." styleClass="muted"/></VBox><Region HBox.hgrow="ALWAYS"/><Label fx:id="countLabel" styleClass="status-chip"/></HBox><VBox fx:id="listBox" spacing="12"/></VBox></ScrollPane></center>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.MyAdsController" styleClass="page">
+ <top><HBox alignment="CENTER_LEFT" spacing="10" styleClass="app-header"><Button text="Back" onAction="#back" styleClass="ghost-button"/><Label text="My listings" styleClass="wordmark"/><Region HBox.hgrow="ALWAYS"/><Button text="Create listing" onAction="#create" styleClass="primary-button"/></HBox></top>
+ <center><ScrollPane fitToWidth="true"><VBox spacing="16" styleClass="page-content"><HBox><VBox spacing="4"><Label text="Manage your listings" styleClass="page-title"/><Label text="Track review status, edit details, or mark an item as sold." styleClass="muted"/></VBox><Region HBox.hgrow="ALWAYS"/><Label fx:id="countLabel" styleClass="status-chip"/></HBox><VBox fx:id="listBox" spacing="10"/></VBox></ScrollPane></center>
 </BorderPane>

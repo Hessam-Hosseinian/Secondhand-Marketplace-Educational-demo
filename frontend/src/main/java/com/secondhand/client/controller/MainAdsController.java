@@ -26,7 +26,8 @@ public class MainAdsController extends BaseController {
   private TilePane adsPane;
 
   @FXML
-  private Button adminButton;
+  private Button adminButton, loginButton, logoutButton, myAdsButton,
+    favoritesButton, messagesButton;
 
   @FXML
   private Label userLabel, resultLabel;
@@ -37,7 +38,20 @@ public class MainAdsController extends BaseController {
   @FXML
   private void initialize() {
     safe(() -> {
-      userLabel.setText("Hello, " + SessionManager.fullName());
+      boolean signedIn = SessionManager.loggedIn();
+      userLabel.setText(signedIn ? SessionManager.fullName() : "");
+      userLabel.setVisible(signedIn);
+      userLabel.setManaged(signedIn);
+      loginButton.setVisible(!signedIn);
+      loginButton.setManaged(!signedIn);
+      logoutButton.setVisible(signedIn);
+      logoutButton.setManaged(signedIn);
+      myAdsButton.setVisible(signedIn);
+      myAdsButton.setManaged(signedIn);
+      favoritesButton.setVisible(signedIn);
+      favoritesButton.setManaged(signedIn);
+      messagesButton.setVisible(signedIn);
+      messagesButton.setManaged(signedIn);
       adminButton.setVisible(SessionManager.admin());
       adminButton.setManaged(SessionManager.admin());
       loadOptions();
@@ -68,9 +82,9 @@ public class MainAdsController extends BaseController {
     cityBox.getSelectionModel().selectFirst();
     conditionBox
       .getItems()
-      .setAll("Any condition", "NEW", "LIKE_NEW", "GOOD", "FAIR", "DAMAGED");
+      .setAll("Any condition", "New", "Like new", "Good", "Fair", "Needs repair");
     conditionBox.getSelectionModel().selectFirst();
-    sortBox.getItems().setAll("newest", "cheapest", "expensive");
+    sortBox.getItems().setAll("Newest", "Price: low to high", "Price: high to low");
     sortBox.getSelectionModel().selectFirst();
   }
 
@@ -78,7 +92,7 @@ public class MainAdsController extends BaseController {
   private void search() {
     safe(() -> {
       StringBuilder path = new StringBuilder("/api/ads?sort=").append(
-        sortBox.getValue() == null ? "newest" : sortBox.getValue()
+        sortValue(sortBox.getValue())
       );
       add(path, "keyword", keywordField.getText());
       add(path, "minPrice", minPriceField.getText());
@@ -94,11 +108,11 @@ public class MainAdsController extends BaseController {
       if (
         conditionBox.getValue() != null &&
         !conditionBox.getValue().startsWith("Any")
-      ) add(path, "condition", conditionBox.getValue());
+      ) add(path, "condition", conditionValue(conditionBox.getValue()));
       JsonNode result = api.get(path.toString());
       adsPane.getChildren().clear();
       for (JsonNode ad : result) adsPane.getChildren().add(card(ad));
-      resultLabel.setText(result.size() + " listings found");
+      resultLabel.setText(result.size() + (result.size() == 1 ? " listing" : " listings"));
     });
   }
 
@@ -108,7 +122,7 @@ public class MainAdsController extends BaseController {
       9,
       UiFactory.image(UiFactory.firstImage(ad), 320, 180),
       UiFactory.title(ad.path("title").asText()),
-      new Label(UiFactory.price(ad)),
+      styled(UiFactory.price(ad), "card-price"),
       new Label(
         ad.path("cityName").asText() +
           "  ·  " +
@@ -122,9 +136,31 @@ public class MainAdsController extends BaseController {
       ),
       UiFactory.action("View details", () -> NavigationManager.details(id))
     );
-    box.getStyleClass().add("card");
+    box.getStyleClass().add("product-card");
     box.setPrefWidth(344);
     return box;
+  }
+
+  private Label styled(String text, String style) {
+    Label label = new Label(text);
+    label.getStyleClass().add(style);
+    return label;
+  }
+
+  private String sortValue(String value) {
+    if ("Price: low to high".equals(value)) return "cheapest";
+    if ("Price: high to low".equals(value)) return "expensive";
+    return "newest";
+  }
+
+  private String conditionValue(String value) {
+    return Map.of(
+      "New", "NEW",
+      "Like new", "LIKE_NEW",
+      "Good", "GOOD",
+      "Fair", "FAIR",
+      "Needs repair", "DAMAGED"
+    ).get(value);
   }
 
   private void add(StringBuilder q, String key, String value) {
@@ -164,7 +200,12 @@ public class MainAdsController extends BaseController {
     safe(() -> {
       api.post("/api/auth/logout", Map.of());
       SessionManager.clear();
-      NavigationManager.login();
+      NavigationManager.mainAds();
     });
+  }
+
+  @FXML
+  private void login() {
+    NavigationManager.login();
   }
 }

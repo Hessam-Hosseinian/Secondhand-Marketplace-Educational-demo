@@ -21,7 +21,8 @@ public class MapperService {
       c.getName(),
       c.getParent() == null ? null : c.getParent().getId(),
       c.getParent() == null ? null : c.getParent().getName(),
-      c.isActive()
+      c.isActive(),
+      c.categoryType()
     );
   }
 
@@ -32,6 +33,7 @@ public class MapperService {
   public AdDto ad(Advertisement a) {
     return new AdDto(
       a.getId(),
+      a.productType(),
       a.getTitle(),
       a.getDescription(),
       a.getPrice(),
@@ -47,9 +49,20 @@ public class MapperService {
       a.getCity().getId(),
       a.getCity().getName(),
       a.getAttributesText(),
+      a.getAttributes()
+        .stream()
+        .collect(
+          java.util.stream.Collectors.toMap(
+            AdvertisementAttribute::getLabel,
+            AdvertisementAttribute::getValue,
+            (first, second) -> first,
+            LinkedHashMap::new
+          )
+        ),
       a.getRejectionReason(),
       a.getImages().stream().map(AdvertisementImage::getImageUrl).toList(),
       ratings.average(a.getOwner()),
+      ratings.countBySeller(a.getOwner()),
       a.getCreatedAt(),
       a.getUpdatedAt()
     );
@@ -61,8 +74,10 @@ public class MapperService {
       u.getFullName(),
       u.getUsername(),
       u.getPhoneNumber(),
+      u.getEmail(),
       u.getRole().name(),
       u.getStatus().name(),
+      u.accountType(),
       u.getCreatedAt()
     );
   }

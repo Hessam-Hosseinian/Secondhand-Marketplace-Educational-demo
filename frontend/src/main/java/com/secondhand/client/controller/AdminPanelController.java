@@ -69,8 +69,8 @@ public class AdminPanelController extends BaseController {
 
   private void reject(long id) {
     TextInputDialog dialog = new TextInputDialog();
-    dialog.setTitle("Reject advertisement");
-    dialog.setHeaderText("Tell the seller what should be corrected");
+    dialog.setTitle("Reject listing");
+    dialog.setHeaderText("Tell the seller what needs to be corrected");
     dialog
       .showAndWait()
       .filter(x -> !x.isBlank())
@@ -127,7 +127,7 @@ public class AdminPanelController extends BaseController {
   private void loadCategories() {
     categoriesBox.getChildren().clear();
     parentCategoryBox.getItems().clear();
-    parentCategoryBox.getItems().add(new Option(0, "Main category", null));
+    parentCategoryBox.getItems().add(new Option(0, "Top-level category", null));
     for (JsonNode category : api.get("/api/categories")) {
       Option option = new Option(
         category.path("id").asLong(),

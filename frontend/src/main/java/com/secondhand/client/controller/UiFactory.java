@@ -2,6 +2,7 @@ package com.secondhand.client.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.text.DecimalFormat;
+import java.util.Map;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
@@ -62,5 +63,25 @@ final class UiFactory {
     Label label = new Label(value);
     label.getStyleClass().add("card-title");
     return label;
+  }
+
+  static String condition(String value) {
+    return Map.of(
+      "NEW", "New",
+      "LIKE_NEW", "Like new",
+      "GOOD", "Good",
+      "FAIR", "Fair",
+      "DAMAGED", "Needs repair"
+    ).getOrDefault(value, value);
+  }
+
+  static String status(String value) {
+    return Map.of(
+      "PENDING", "Pending review",
+      "ACTIVE", "Active",
+      "REJECTED", "Rejected",
+      "DELETED", "Deleted",
+      "SOLD", "Sold"
+    ).getOrDefault(value, value);
   }
 }

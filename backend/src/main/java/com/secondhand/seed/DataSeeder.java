@@ -1,6 +1,7 @@
 package com.secondhand.seed;
 
 import com.secondhand.entity.*;
+import com.secondhand.entity.account.*;
 import com.secondhand.repository.*;
 import java.math.BigDecimal;
 import java.util.*;
@@ -8,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import com.secondhand.service.*;
 
 @Component
 public class DataSeeder implements CommandLineRunner {
@@ -20,6 +22,9 @@ public class DataSeeder implements CommandLineRunner {
   private final ConversationRepository conversations;
   private final MessageRepository messages;
   private final SellerRatingRepository ratings;
+  private final CategoryAttributeRepository categoryAttributes;
+  private final CategoryFactory categoryFactory;
+  private final ProductFactory productFactory;
   private final PasswordEncoder encoder;
 
   public DataSeeder(
@@ -31,6 +36,9 @@ public class DataSeeder implements CommandLineRunner {
     ConversationRepository conversations,
     MessageRepository messages,
     SellerRatingRepository ratings,
+    CategoryAttributeRepository categoryAttributes,
+    CategoryFactory categoryFactory,
+    ProductFactory productFactory,
     PasswordEncoder encoder
   ) {
     this.users = users;
@@ -41,6 +49,9 @@ public class DataSeeder implements CommandLineRunner {
     this.conversations = conversations;
     this.messages = messages;
     this.ratings = ratings;
+    this.categoryAttributes = categoryAttributes;
+    this.categoryFactory = categoryFactory;
+    this.productFactory = productFactory;
     this.encoder = encoder;
   }
 
@@ -48,10 +59,96 @@ public class DataSeeder implements CommandLineRunner {
   @Transactional
   public void run(String... args) {
     if (users.count() > 0) {
+      ensureCatalog();
       credentials();
       return;
     }
     seed();
+    ensureCatalog();
+  }
+
+  private void ensureCatalog() {
+    categories.findAll().forEach(category -> {
+      Category expected = categoryFactory.create(
+        category.getName(),
+        category.getParent()
+      );
+      category.setCategoryKind(expected.categoryType());
+    });
+    ads.findAll().forEach(ad -> {
+      Advertisement expected = productFactory.create(ad.getCategory(), Map.of());
+      ad.setProductKind(expected.productType());
+    });
+
+    Category home = ensureCategory("خانه و آشپزخانه", null);
+    Category furniture = ensureCategory("مبلمان", home);
+    Category appliance = ensureCategory("لوازم خانگی", home);
+    Category fashion = ensureCategory("مد و پوشاک", null);
+    Category clothing = ensureCategory("لباس", fashion);
+    Category bag = ensureCategory("کیف و کفش", fashion);
+    Category leisure = ensureCategory("ورزش و سرگرمی", null);
+    Category bicycle = ensureCategory("دوچرخه", leisure);
+    Category console = ensureCategory("کنسول بازی", leisure);
+    Category tools = ensureCategory("ابزار و تجهیزات", null);
+    Category industrial = ensureCategory("ابزار صنعتی", tools);
+    Category culture = ensureCategory("کتاب و آموزش", null);
+    Category book = ensureCategory("کتاب", culture);
+
+    addAttribute(furniture, "material", "جنس", "SELECT", "چوب|فلز|پارچه|ترکیبی", true, 1);
+    addAttribute(furniture, "color", "رنگ", "TEXT", null, true, 2);
+    addAttribute(appliance, "brand", "برند", "TEXT", null, true, 1);
+    addAttribute(appliance, "energy", "رده مصرف انرژی", "SELECT", "A+++|A++|A+|A|B|C", false, 2);
+    addAttribute(clothing, "size", "سایز", "SELECT", "XS|S|M|L|XL|XXL", true, 1);
+    addAttribute(clothing, "color", "رنگ", "TEXT", null, false, 2);
+    addAttribute(bag, "material", "جنس", "TEXT", null, false, 1);
+    addAttribute(bicycle, "frameSize", "اندازه فریم", "TEXT", null, true, 1);
+    addAttribute(console, "brand", "سازنده", "SELECT", "Sony|Microsoft|Nintendo|سایر", true, 1);
+    addAttribute(console, "storage", "حافظه", "TEXT", null, false, 2);
+    addAttribute(industrial, "brand", "برند", "TEXT", null, false, 1);
+    addAttribute(industrial, "power", "توان", "TEXT", null, false, 2);
+    addAttribute(book, "author", "نویسنده", "TEXT", null, true, 1);
+    addAttribute(book, "publisher", "ناشر", "TEXT", null, false, 2);
+
+    categories.findByName("ماشین").ifPresent(c -> {
+      addAttribute(c, "brand", "برند", "TEXT", null, true, 1);
+      addAttribute(c, "modelYear", "سال ساخت", "TEXT", null, true, 2);
+      addAttribute(c, "mileage", "کارکرد", "TEXT", null, false, 3);
+    });
+    categories.findByName("گوشی").ifPresent(c -> {
+      addAttribute(c, "brand", "برند", "TEXT", null, true, 1);
+      addAttribute(c, "storage", "حافظه", "SELECT", "۶۴ گیگ|۱۲۸ گیگ|۲۵۶ گیگ|۵۱۲ گیگ|۱ ترابایت", true, 2);
+      addAttribute(c, "ram", "رم", "TEXT", null, false, 3);
+    });
+    categories.findByName("لپ‌تاپ").ifPresent(c -> {
+      addAttribute(c, "brand", "برند", "TEXT", null, true, 1);
+      addAttribute(c, "ram", "رم", "TEXT", null, true, 2);
+      addAttribute(c, "storage", "حافظه", "TEXT", null, true, 3);
+    });
+  }
+
+  private Category ensureCategory(String name, Category parent) {
+    return categories.findByName(name).orElseGet(() -> category(name, parent));
+  }
+
+  private void addAttribute(
+    Category category,
+    String key,
+    String label,
+    String type,
+    String options,
+    boolean required,
+    int order
+  ) {
+    if (categoryAttributes.existsByCategoryIdAndAttributeKey(category.getId(), key)) return;
+    CategoryAttribute attribute = new CategoryAttribute();
+    attribute.setCategory(category);
+    attribute.setAttributeKey(key);
+    attribute.setLabel(label);
+    attribute.setInputType(type);
+    attribute.setOptionsText(options);
+    attribute.setRequired(required);
+    attribute.setSortOrder(order);
+    categoryAttributes.save(attribute);
   }
 
   private void seed() {
@@ -225,7 +322,10 @@ public class DataSeeder implements CommandLineRunner {
 
     List<Advertisement> made = new ArrayList<>();
     for (int i = 0; i < items.length; i++) {
-      Advertisement ad = new Advertisement();
+      Advertisement ad = productFactory.create(
+        categoryMap.get(items[i][1]),
+        Map.of()
+      );
       ad.setTitle(items[i][0]);
       ad.setDescription(items[i][3]);
       ad.setPrice(new BigDecimal(items[i][2]));
@@ -307,20 +407,21 @@ public class DataSeeder implements CommandLineRunner {
     Enums.Role role,
     Enums.UserStatus status
   ) {
-    User user = new User();
+    User user = role == Enums.Role.ADMIN
+      ? new AdminUser()
+      : new CustomerUser();
     user.setFullName(fullName);
     user.setUsername(username);
     user.setPasswordHash(encoder.encode(password));
-    user.setPhoneNumber("۰۹۱۲۰۰۰۰۰۰۰");
+    user.setPhoneNumber("09" + String.format("%09d", Math.abs(username.hashCode()) % 1_000_000_000L));
+    user.setEmail(username + "@secondhand.local");
     user.setRole(role);
     user.setStatus(status);
     return users.save(user);
   }
 
   private Category category(String name, Category parent) {
-    Category category = new Category();
-    category.setName(name);
-    category.setParent(parent);
+    Category category = categoryFactory.create(name, parent);
     return categories.save(category);
   }
 
