@@ -118,23 +118,39 @@ public class MainAdsController extends BaseController {
 
   private VBox card(JsonNode ad) {
     long id = ad.path("id").asLong();
+
+    Label metaLabel = styled(
+      ad.path("cityName").asText() + "  ·  " + ad.path("categoryName").asText(),
+      "card-meta"
+    );
+
+    Label ratingLabel = new Label(
+      ad.path("sellerAverageRating").isNull()
+        ? "New seller"
+        : "★ " + String.format("%.1f", ad.path("sellerAverageRating").asDouble())
+    );
+    ratingLabel
+      .getStyleClass()
+      .add(ad.path("sellerAverageRating").isNull() ? "card-meta" : "rating-chip");
+
+    HBox priceRow = new HBox(8, styled(UiFactory.price(ad), "card-price"),
+      UiFactory.spacer(), ratingLabel);
+    priceRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+    Button viewButton = UiFactory.action(
+      "View details",
+      () -> NavigationManager.details(id)
+    );
+    viewButton.getStyleClass().add("secondary-button");
+    viewButton.setMaxWidth(Double.MAX_VALUE);
+
     VBox box = new VBox(
-      9,
-      UiFactory.image(UiFactory.firstImage(ad), 320, 180),
+      10,
+      UiFactory.image(UiFactory.firstImage(ad), 320, 190),
       UiFactory.title(ad.path("title").asText()),
-      styled(UiFactory.price(ad), "card-price"),
-      new Label(
-        ad.path("cityName").asText() +
-          "  ·  " +
-          ad.path("categoryName").asText()
-      ),
-      new Label(
-        ad.path("sellerAverageRating").isNull()
-          ? "New seller"
-          : "★ " +
-              String.format("%.1f", ad.path("sellerAverageRating").asDouble())
-      ),
-      UiFactory.action("View details", () -> NavigationManager.details(id))
+      metaLabel,
+      priceRow,
+      viewButton
     );
     box.getStyleClass().add("product-card");
     box.setPrefWidth(344);
