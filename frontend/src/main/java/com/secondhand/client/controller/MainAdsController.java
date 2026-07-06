@@ -1,6 +1,7 @@
 package com.secondhand.client.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.secondhand.client.app.Animations;
 import com.secondhand.client.app.NavigationManager;
 import com.secondhand.client.auth.SessionManager;
 import com.secondhand.client.model.Option;
@@ -112,6 +113,7 @@ public class MainAdsController extends BaseController {
       JsonNode result = api.get(path.toString());
       adsPane.getChildren().clear();
       for (JsonNode ad : result) adsPane.getChildren().add(card(ad));
+      Animations.stagger(adsPane.getChildren());
       resultLabel.setText(result.size() + (result.size() == 1 ? " listing" : " listings"));
     });
   }
@@ -137,10 +139,11 @@ public class MainAdsController extends BaseController {
       UiFactory.spacer(), ratingLabel);
     priceRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-    Button viewButton = UiFactory.action(
-      "View details",
-      () -> NavigationManager.details(id)
-    );
+    Button viewButton = new Button("View details");
+    viewButton.setOnAction(e -> {
+      Animations.pressPop(viewButton);
+      NavigationManager.details(id);
+    });
     viewButton.getStyleClass().add("secondary-button");
     viewButton.setMaxWidth(Double.MAX_VALUE);
 
@@ -154,6 +157,7 @@ public class MainAdsController extends BaseController {
     );
     box.getStyleClass().add("product-card");
     box.setPrefWidth(344);
+    Animations.hoverLift(box);
     return box;
   }
 

@@ -1,6 +1,7 @@
 package com.secondhand.client.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.secondhand.client.app.Animations;
 import com.secondhand.client.app.NavigationManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -46,8 +47,10 @@ public class FavoritesController extends BaseController {
             })
           )
         );
+        Animations.hoverLift(row);
         listBox.getChildren().add(row);
       }
+      Animations.stagger(listBox.getChildren());
     });
   }
 

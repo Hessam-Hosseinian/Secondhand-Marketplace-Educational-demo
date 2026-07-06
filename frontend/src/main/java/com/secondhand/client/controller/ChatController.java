@@ -1,6 +1,7 @@
 package com.secondhand.client.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.secondhand.client.app.Animations;
 import com.secondhand.client.app.NavigationManager;
 import com.secondhand.client.auth.SessionManager;
 import java.util.Map;
@@ -57,6 +58,7 @@ public class ChatController extends BaseController {
         );
         messagesBox.getChildren().add(block);
       }
+      Animations.stagger(messagesBox.getChildren());
       scrollPane.setVvalue(1);
     });
   }

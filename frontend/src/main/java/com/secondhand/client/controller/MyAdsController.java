@@ -1,6 +1,7 @@
 package com.secondhand.client.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.secondhand.client.app.Animations;
 import com.secondhand.client.app.NavigationManager;
 import com.secondhand.client.util.DialogUtils;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class MyAdsController extends BaseController {
       countLabel.setText(ads.size() + (ads.size() == 1 ? " listing" : " listings"));
       listBox.getChildren().clear();
       for (JsonNode ad : ads) listBox.getChildren().add(row(ad));
+      Animations.stagger(listBox.getChildren());
     });
   }
 
@@ -65,6 +67,7 @@ public class MyAdsController extends BaseController {
         })
       )
     );
+    Animations.hoverLift(row);
     return row;
   }
 
