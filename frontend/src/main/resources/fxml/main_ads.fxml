@@ -5,7 +5,7 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.MainAdsController" styleClass="page">
  <top><VBox>
   <HBox alignment="CENTER_LEFT" spacing="8" styleClass="app-header">
-   <Label text="RE:MARKET" styleClass="wordmark"/><Region HBox.hgrow="ALWAYS"/>
+   <HBox alignment="CENTER_LEFT" spacing="0"><Label text="Re:Market" styleClass="wordmark"/><Label text="." styleClass="wordmark-dot"/></HBox><Region HBox.hgrow="ALWAYS"/>
    <Button text="Sell an item" onAction="#create" styleClass="primary-button"/>
    <Button fx:id="myAdsButton" text="My listings" onAction="#myAds" styleClass="nav-button"/>
    <Button fx:id="favoritesButton" text="Saved" onAction="#favorites" styleClass="nav-button"/>
@@ -16,7 +16,8 @@
    <Button fx:id="loginButton" text="Sign in" onAction="#login" styleClass="secondary-button"/>
    <Button fx:id="logoutButton" text="Log out" onAction="#logout" styleClass="ghost-button"/>
   </HBox>
-  <VBox spacing="6" styleClass="search-hero">
+  <VBox spacing="7" styleClass="search-hero">
+   <Label text="CURATED SECOND-HAND MARKETPLACE" styleClass="hero-eyebrow"/>
    <Label text="Find something worth keeping" styleClass="search-title"/>
    <Label text="Quality second-hand items from people nearby." styleClass="search-subtitle"/>
    <HBox spacing="8" styleClass="filter-bar">

@@ -3,7 +3,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.AdDetailsController" styleClass="page">
- <top><HBox alignment="CENTER_LEFT" spacing="10" styleClass="app-header"><Button text="Back" onAction="#back" styleClass="ghost-button"/><Label text="RE:MARKET" styleClass="wordmark"/><Region HBox.hgrow="ALWAYS"/><Label text="Listing details" styleClass="muted"/></HBox></top>
+ <top><HBox alignment="CENTER_LEFT" spacing="10" styleClass="app-header"><Button text="Back" onAction="#back" styleClass="ghost-button"/><HBox alignment="CENTER_LEFT" spacing="0"><Label text="Re:Market" styleClass="wordmark"/><Label text="." styleClass="wordmark-dot"/></HBox><Region HBox.hgrow="ALWAYS"/><Label text="Listing details" styleClass="muted"/></HBox></top>
  <center><ScrollPane fitToWidth="true"><VBox alignment="TOP_CENTER" spacing="18" styleClass="details-layout">
   <HBox maxWidth="1080" spacing="24">
    <VBox prefWidth="680" styleClass="details-image-panel"><ImageView fx:id="imageView" fitWidth="656" fitHeight="410" preserveRatio="false" styleClass="detail-image"/></VBox>
