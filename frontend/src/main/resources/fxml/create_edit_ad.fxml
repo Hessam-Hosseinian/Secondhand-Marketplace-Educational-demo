@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.CreateEditAdController" styleClass="page">
- <top><HBox alignment="CENTER_LEFT" styleClass="app-header"><Button text="Cancel" onAction="#cancel" styleClass="ghost-button"/><Region HBox.hgrow="ALWAYS"/><Label text="RE:MARKET" styleClass="wordmark"/></HBox></top>
+ <top><HBox alignment="CENTER_LEFT" styleClass="app-header"><Button text="Cancel" onAction="#cancel" styleClass="ghost-button"/><Region HBox.hgrow="ALWAYS"/><HBox alignment="CENTER_LEFT" spacing="0"><Label text="Re:Market" styleClass="wordmark"/><Label text="." styleClass="wordmark-dot"/></HBox></HBox></top>
  <center><ScrollPane fitToWidth="true"><VBox alignment="TOP_CENTER" styleClass="page-content">
   <VBox maxWidth="840" spacing="13" styleClass="surface">
    <Label fx:id="headingLabel" text="Create a listing" styleClass="page-title"/><Label text="Clear details and good photos help your item sell faster. New listings are reviewed before publishing." maxWidth="780" wrapText="true" styleClass="muted"/>

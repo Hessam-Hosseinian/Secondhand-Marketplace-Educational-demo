@@ -1,6 +1,7 @@
 package com.secondhand.client.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.secondhand.client.app.Animations;
 import com.secondhand.client.app.NavigationManager;
 import com.secondhand.client.auth.SessionManager;
 import com.secondhand.client.model.Option;
@@ -112,32 +113,51 @@ public class MainAdsController extends BaseController {
       JsonNode result = api.get(path.toString());
       adsPane.getChildren().clear();
       for (JsonNode ad : result) adsPane.getChildren().add(card(ad));
+      Animations.stagger(adsPane.getChildren());
       resultLabel.setText(result.size() + (result.size() == 1 ? " listing" : " listings"));
     });
   }
 
   private VBox card(JsonNode ad) {
     long id = ad.path("id").asLong();
+
+    Label metaLabel = styled(
+      ad.path("cityName").asText() + "  ·  " + ad.path("categoryName").asText(),
+      "card-meta"
+    );
+
+    Label ratingLabel = new Label(
+      ad.path("sellerAverageRating").isNull()
+        ? "New seller"
+        : "★ " + String.format("%.1f", ad.path("sellerAverageRating").asDouble())
+    );
+    ratingLabel
+      .getStyleClass()
+      .add(ad.path("sellerAverageRating").isNull() ? "card-meta" : "rating-chip");
+
+    HBox priceRow = new HBox(8, styled(UiFactory.price(ad), "card-price"),
+      UiFactory.spacer(), ratingLabel);
+    priceRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+    Button viewButton = new Button("View details");
+    viewButton.setOnAction(e -> {
+      Animations.pressPop(viewButton);
+      NavigationManager.details(id);
+    });
+    viewButton.getStyleClass().add("secondary-button");
+    viewButton.setMaxWidth(Double.MAX_VALUE);
+
     VBox box = new VBox(
-      9,
-      UiFactory.image(UiFactory.firstImage(ad), 320, 180),
+      10,
+      UiFactory.image(UiFactory.firstImage(ad), 320, 190),
       UiFactory.title(ad.path("title").asText()),
-      styled(UiFactory.price(ad), "card-price"),
-      new Label(
-        ad.path("cityName").asText() +
-          "  ·  " +
-          ad.path("categoryName").asText()
-      ),
-      new Label(
-        ad.path("sellerAverageRating").isNull()
-          ? "New seller"
-          : "★ " +
-              String.format("%.1f", ad.path("sellerAverageRating").asDouble())
-      ),
-      UiFactory.action("View details", () -> NavigationManager.details(id))
+      metaLabel,
+      priceRow,
+      viewButton
     );
     box.getStyleClass().add("product-card");
     box.setPrefWidth(344);
+    Animations.hoverLift(box);
     return box;
   }
 
