@@ -1,6 +1,7 @@
 package com.secondhand.client.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.secondhand.client.app.Animations;
 import com.secondhand.client.app.NavigationManager;
 import com.secondhand.client.auth.SessionManager;
 import javafx.fxml.FXML;
@@ -44,8 +45,10 @@ public class ConversationsController extends BaseController {
             UiFactory.spacer(),
             UiFactory.action("Open", () -> NavigationManager.chat(id))
           );
+        Animations.hoverLift(row);
         listBox.getChildren().add(row);
       }
+      Animations.stagger(listBox.getChildren());
     });
   }
 

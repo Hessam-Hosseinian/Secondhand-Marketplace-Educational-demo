@@ -1,6 +1,7 @@
 package com.secondhand.client.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.secondhand.client.app.Animations;
 import com.secondhand.client.app.NavigationManager;
 import com.secondhand.client.auth.SessionManager;
 import com.secondhand.client.model.Option;
@@ -63,8 +64,10 @@ public class AdminPanelController extends BaseController {
           })
         )
       );
+      Animations.hoverLift(row);
       pendingBox.getChildren().add(row);
     }
+    Animations.stagger(pendingBox.getChildren());
   }
 
   private void reject(long id) {
@@ -120,8 +123,10 @@ public class AdminPanelController extends BaseController {
           UiFactory.spacer(),
           action
         );
+      Animations.hoverLift(row);
       usersBox.getChildren().add(row);
     }
+    Animations.stagger(usersBox.getChildren());
   }
 
   private void loadCategories() {
@@ -152,6 +157,7 @@ public class AdminPanelController extends BaseController {
       );
       categoriesBox.getChildren().add(row);
     }
+    Animations.stagger(categoriesBox.getChildren());
     parentCategoryBox.getSelectionModel().selectFirst();
   }
 
@@ -174,6 +180,7 @@ public class AdminPanelController extends BaseController {
       );
       citiesBox.getChildren().add(row);
     }
+    Animations.stagger(citiesBox.getChildren());
   }
 
   @FXML
