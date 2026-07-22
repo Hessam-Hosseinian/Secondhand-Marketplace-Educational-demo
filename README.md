@@ -176,6 +176,12 @@ cd frontend
 mvn javafx:run
 ```
 
+If the backend is running at a different address, configure the client with:
+
+```bash
+SECONDHAND_API_URL=http://localhost:18080 mvn javafx:run
+```
+
 The backend listens on:
 
 ```text

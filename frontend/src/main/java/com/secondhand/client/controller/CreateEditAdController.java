@@ -1,6 +1,7 @@
 package com.secondhand.client.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.secondhand.client.api.ApiClient;
 import com.secondhand.client.app.NavigationManager;
 import com.secondhand.client.model.Option;
 import com.secondhand.client.util.DialogUtils;
@@ -43,11 +44,16 @@ public class CreateEditAdController extends BaseController {
   private final Map<String, Control> attributeInputs = new LinkedHashMap<>();
   private final Map<String, String> attributeLabels = new LinkedHashMap<>();
   private static final Map<String, String> CONDITIONS = Map.of(
-    "New", "NEW",
-    "Like new", "LIKE_NEW",
-    "Good", "GOOD",
-    "Fair", "FAIR",
-    "Needs repair", "DAMAGED"
+    "New",
+    "NEW",
+    "Like new",
+    "LIKE_NEW",
+    "Good",
+    "GOOD",
+    "Fair",
+    "FAIR",
+    "Needs repair",
+    "DAMAGED"
   );
 
   @FXML
@@ -73,9 +79,7 @@ public class CreateEditAdController extends BaseController {
           .add(
             new Option(n.path("id").asLong(), n.path("name").asText(), null)
           );
-      conditionBox
-        .getItems()
-        .setAll(CONDITIONS.keySet());
+      conditionBox.getItems().setAll(CONDITIONS.keySet());
       conditionBox.setValue("Good");
       if (!mainCategoryBox.getItems().isEmpty()) mainCategoryBox
         .getSelectionModel()
@@ -91,14 +95,16 @@ public class CreateEditAdController extends BaseController {
     existing = ad;
     if (ad == null) return;
     headingLabel.setText("Edit listing");
+    mainCategoryBox.setDisable(true);
+    subcategoryBox.setDisable(true);
     titleField.setText(ad.path("title").asText());
     priceField.setText(ad.path("price").asText());
     descriptionArea.setText(ad.path("description").asText());
     attributesArea.setText(ad.path("attributesText").asText());
-    for (JsonNode image : ad.path("imageUrls")) imageList
-      .getItems()
-      .add(image.asText());
-    CONDITIONS.entrySet().stream()
+    for (JsonNode image : ad.path("imageUrls"))
+      imageList.getItems().add(image.asText());
+    CONDITIONS.entrySet()
+      .stream()
       .filter(x -> x.getValue().equals(ad.path("itemCondition").asText()))
       .map(Map.Entry::getKey)
       .findFirst()
@@ -165,11 +171,16 @@ public class CreateEditAdController extends BaseController {
           field.setPromptText("Enter " + label.toLowerCase());
           input = field;
         }
-        String oldValue = existing == null
-          ? ""
-          : existing.path("attributes").path(label).asText("");
+        String oldValue =
+          existing == null
+            ? ""
+            : existing.path("attributes").path(label).asText("");
         setValue(input, oldValue);
-        HBox row = new HBox(12, new Label(label + (required ? " *" : "")), input);
+        HBox row = new HBox(
+          12,
+          new Label(label + (required ? " *" : "")),
+          input
+        );
         row.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(input, Priority.ALWAYS);
         dynamicAttributesBox.getChildren().add(row);
@@ -215,10 +226,24 @@ public class CreateEditAdController extends BaseController {
       var files = chooser.showOpenMultipleDialog(
         imageList.getScene().getWindow()
       );
-      if (files != null) for (var file : files) imageList
-        .getItems()
-        .add(api.uploadImage(file).path("imageUrl").asText());
+      if (files == null) return;
+      if (
+        imageList.getItems().size() + files.size() > 10
+      ) throw new ApiClient.ApiException(
+        400,
+        "A listing can contain at most 10 photos."
+      );
+      for (var file : files)
+        imageList
+          .getItems()
+          .add(api.uploadImage(file).path("imageUrl").asText());
     });
+  }
+
+  @FXML
+  private void removeImage() {
+    int selected = imageList.getSelectionModel().getSelectedIndex();
+    if (selected >= 0) imageList.getItems().remove(selected);
   }
 
   @FXML
@@ -229,9 +254,22 @@ public class CreateEditAdController extends BaseController {
         titleField.getText().isBlank() ||
         descriptionArea.getText().isBlank() ||
         priceField.getText().isBlank() ||
-        subcategoryBox.getValue() == null
+        subcategoryBox.getValue() == null ||
+        cityBox.getValue() == null ||
+        conditionBox.getValue() == null
       ) {
         errorLabel.setText("Complete all required fields.");
+        return;
+      }
+      try {
+        if (
+          new java.math.BigDecimal(priceField.getText().trim()).signum() < 0
+        ) {
+          errorLabel.setText("Price must be a non-negative number.");
+          return;
+        }
+      } catch (NumberFormatException e) {
+        errorLabel.setText("Price must be a non-negative number.");
         return;
       }
       Map<String, Object> body = new LinkedHashMap<>();
@@ -243,7 +281,9 @@ public class CreateEditAdController extends BaseController {
       body.put("itemCondition", CONDITIONS.get(conditionBox.getValue()));
       body.put("attributesText", attributesArea.getText());
       Map<String, String> attributes = new LinkedHashMap<>();
-      attributeInputs.forEach((key, input) -> attributes.put(key, value(input)));
+      attributeInputs.forEach((key, input) ->
+        attributes.put(key, value(input))
+      );
       body.put("attributes", attributes);
       body.put("imageUrls", new ArrayList<>(imageList.getItems()));
       if (existing == null) api.post("/api/ads", body);

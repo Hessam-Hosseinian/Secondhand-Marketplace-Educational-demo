@@ -1,15 +1,18 @@
 package com.secondhand.client.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.secondhand.client.api.ApiClient;
 import com.secondhand.client.app.Animations;
 import com.secondhand.client.app.NavigationManager;
 import com.secondhand.client.auth.SessionManager;
 import com.secondhand.client.model.Option;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 public class MainAdsController extends BaseController {
@@ -28,13 +31,20 @@ public class MainAdsController extends BaseController {
 
   @FXML
   private Button adminButton, loginButton, logoutButton, myAdsButton,
-    favoritesButton, messagesButton;
+    favoritesButton, messagesButton, searchButton;
 
   @FXML
   private Label userLabel, resultLabel;
 
+  @FXML
+  private VBox emptyState;
+
+  @FXML
+  private ProgressIndicator loadingIndicator;
+
   private final List<Option> categories = new ArrayList<>(),
     cities = new ArrayList<>();
+  private int searchVersion;
 
   @FXML
   private void initialize() {
@@ -83,15 +93,25 @@ public class MainAdsController extends BaseController {
     cityBox.getSelectionModel().selectFirst();
     conditionBox
       .getItems()
-      .setAll("Any condition", "New", "Like new", "Good", "Fair", "Needs repair");
+      .setAll(
+        "Any condition",
+        "New",
+        "Like new",
+        "Good",
+        "Fair",
+        "Needs repair"
+      );
     conditionBox.getSelectionModel().selectFirst();
-    sortBox.getItems().setAll("Newest", "Price: low to high", "Price: high to low");
+    sortBox
+      .getItems()
+      .setAll("Newest", "Price: low to high", "Price: high to low");
     sortBox.getSelectionModel().selectFirst();
   }
 
   @FXML
   private void search() {
     safe(() -> {
+      validatePriceRange();
       StringBuilder path = new StringBuilder("/api/ads?sort=").append(
         sortValue(sortBox.getValue())
       );
@@ -110,48 +130,133 @@ public class MainAdsController extends BaseController {
         conditionBox.getValue() != null &&
         !conditionBox.getValue().startsWith("Any")
       ) add(path, "condition", conditionValue(conditionBox.getValue()));
-      JsonNode result = api.get(path.toString());
-      adsPane.getChildren().clear();
-      for (JsonNode ad : result) adsPane.getChildren().add(card(ad));
-      Animations.stagger(adsPane.getChildren());
-      resultLabel.setText(result.size() + (result.size() == 1 ? " listing" : " listings"));
+      int requestVersion = ++searchVersion;
+      setLoading(true);
+      async(
+        () -> api.get(path.toString()),
+        result -> {
+          if (requestVersion == searchVersion) showResults(result);
+        },
+        () -> {
+          if (requestVersion == searchVersion) setLoading(false);
+        }
+      );
     });
+  }
+
+  private void showResults(JsonNode result) {
+    adsPane.getChildren().clear();
+    for (JsonNode ad : result) adsPane.getChildren().add(card(ad));
+    boolean empty = result.isEmpty();
+    adsPane.setVisible(!empty);
+    adsPane.setManaged(!empty);
+    emptyState.setVisible(empty);
+    emptyState.setManaged(empty);
+    resultLabel.setText(
+      result.size() + (result.size() == 1 ? " match" : " matches")
+    );
+  }
+
+  private void setLoading(boolean loading) {
+    loadingIndicator.setVisible(loading);
+    loadingIndicator.setManaged(loading);
+    searchButton.setDisable(loading);
+    adsPane.setOpacity(loading ? 0.5 : 1);
+    resultLabel.setText(loading ? "Finding the best matches…" : resultLabel.getText());
+  }
+
+  @FXML
+  private void clearFilters() {
+    keywordField.clear();
+    minPriceField.clear();
+    maxPriceField.clear();
+    categoryBox.getSelectionModel().selectFirst();
+    cityBox.getSelectionModel().selectFirst();
+    conditionBox.getSelectionModel().selectFirst();
+    sortBox.getSelectionModel().selectFirst();
+    search();
+  }
+
+  private void validatePriceRange() {
+    BigDecimal min = price(minPriceField.getText(), "Minimum price");
+    BigDecimal max = price(maxPriceField.getText(), "Maximum price");
+    if (
+      min != null && max != null && min.compareTo(max) > 0
+    ) throw new ApiClient.ApiException(
+      400,
+      "Minimum price cannot exceed maximum price."
+    );
+  }
+
+  private BigDecimal price(String value, String label) {
+    if (value == null || value.isBlank()) return null;
+    try {
+      BigDecimal result = new BigDecimal(value.trim());
+      if (result.signum() < 0) throw new NumberFormatException();
+      return result;
+    } catch (NumberFormatException e) {
+      throw new ApiClient.ApiException(
+        400,
+        label + " must be a non-negative number."
+      );
+    }
   }
 
   private VBox card(JsonNode ad) {
     long id = ad.path("id").asLong();
+    ImageView preview = UiFactory.image(UiFactory.firstImage(ad), 320, 190);
+    Label title = UiFactory.title(ad.path("title").asText());
+    preview.getStyleClass().add("card-link");
+    title.getStyleClass().add("card-link");
+    preview.setOnMouseClicked(event -> NavigationManager.details(id));
+    title.setOnMouseClicked(event -> NavigationManager.details(id));
 
     Label metaLabel = styled(
       ad.path("cityName").asText() + "  ·  " + ad.path("categoryName").asText(),
       "card-meta"
     );
 
+    Label conditionLabel = styled(
+      UiFactory.condition(ad.path("itemCondition").asText()),
+      "condition-badge"
+    );
+
     Label ratingLabel = new Label(
       ad.path("sellerAverageRating").isNull()
         ? "New seller"
-        : "★ " + String.format("%.1f", ad.path("sellerAverageRating").asDouble())
+        : "★ " +
+            String.format("%.1f", ad.path("sellerAverageRating").asDouble())
     );
     ratingLabel
       .getStyleClass()
-      .add(ad.path("sellerAverageRating").isNull() ? "card-meta" : "rating-chip");
+      .add(
+        ad.path("sellerAverageRating").isNull() ? "card-meta" : "rating-chip"
+      );
 
-    HBox priceRow = new HBox(8, styled(UiFactory.price(ad), "card-price"),
-      UiFactory.spacer(), ratingLabel);
+    HBox priceRow = new HBox(
+      8,
+      styled(UiFactory.price(ad), "card-price"),
+      UiFactory.spacer(),
+      ratingLabel
+    );
     priceRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+    HBox metaRow = new HBox(8, metaLabel, UiFactory.spacer(), conditionLabel);
+    metaRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
     Button viewButton = new Button("View details");
     viewButton.setOnAction(e -> {
-      Animations.pressPop(viewButton);
       NavigationManager.details(id);
     });
     viewButton.getStyleClass().add("secondary-button");
     viewButton.setMaxWidth(Double.MAX_VALUE);
+    viewButton.setTooltip(new Tooltip("Open listing details"));
 
     VBox box = new VBox(
       10,
-      UiFactory.image(UiFactory.firstImage(ad), 320, 190),
-      UiFactory.title(ad.path("title").asText()),
-      metaLabel,
+      preview,
+      title,
+      metaRow,
       priceRow,
       viewButton
     );
@@ -175,11 +280,16 @@ public class MainAdsController extends BaseController {
 
   private String conditionValue(String value) {
     return Map.of(
-      "New", "NEW",
-      "Like new", "LIKE_NEW",
-      "Good", "GOOD",
-      "Fair", "FAIR",
-      "Needs repair", "DAMAGED"
+      "New",
+      "NEW",
+      "Like new",
+      "LIKE_NEW",
+      "Good",
+      "GOOD",
+      "Fair",
+      "FAIR",
+      "Needs repair",
+      "DAMAGED"
     ).get(value);
   }
 
@@ -217,11 +327,8 @@ public class MainAdsController extends BaseController {
 
   @FXML
   private void logout() {
-    safe(() -> {
-      api.post("/api/auth/logout", Map.of());
-      SessionManager.clear();
-      NavigationManager.mainAds();
-    });
+    SessionManager.clear();
+    NavigationManager.mainAds();
   }
 
   @FXML

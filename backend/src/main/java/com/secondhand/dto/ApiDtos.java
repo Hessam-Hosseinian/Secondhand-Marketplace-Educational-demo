@@ -10,16 +10,16 @@ public final class ApiDtos {
   private ApiDtos() {}
 
   public record RegisterRequest(
-    @NotBlank String fullName,
-    @NotBlank String username,
-    @Size(min = 6) String password,
-    @NotBlank String phoneNumber,
-    @NotBlank @Email String email
+    @NotBlank @Size(max = 255) String fullName,
+    @NotBlank @Size(max = 255) String username,
+    @NotBlank @Size(min = 6, max = 72) String password,
+    @NotBlank @Size(max = 255) String phoneNumber,
+    @NotBlank @Email @Size(max = 255) String email
   ) {}
 
   public record LoginRequest(
-    @NotBlank String username,
-    @NotBlank String password
+    @NotBlank @Size(max = 255) String username,
+    @NotBlank @Size(max = 72) String password
   ) {}
 
   public record AuthResponse(
@@ -58,16 +58,16 @@ public final class ApiDtos {
   ) {}
 
   public record AdRequest(
-    @NotBlank String title,
-    @NotBlank String description,
+    @NotBlank @Size(max = 255) String title,
+    @NotBlank @Size(max = 5000) String description,
     @NotNull @DecimalMin("0") BigDecimal price,
     @NotBlank String itemCondition,
     @NotNull Long categoryId,
     @NotNull Long cityId,
-    String attributesText,
+    @Size(max = 3000) String attributesText,
     Map<String, String> attributes,
-    String imageUrl,
-    List<String> imageUrls
+    @Size(max = 1000) String imageUrl,
+    @Size(max = 10) List<@NotBlank @Size(max = 1000) String> imageUrls
   ) {}
 
   public record AdDto(
@@ -95,7 +95,7 @@ public final class ApiDtos {
     LocalDateTime updatedAt
   ) {}
 
-  public record MessageRequest(@NotBlank String content) {}
+  public record MessageRequest(@NotBlank @Size(max = 2000) String content) {}
 
   public record MessageDto(
     Long id,
@@ -122,7 +122,7 @@ public final class ApiDtos {
     @NotNull Long advertisementId,
     @NotNull Long sellerId,
     @Min(1) @Max(5) int rating,
-    String comment
+    @Size(max = 255) String comment
   ) {}
 
   public record RatingDto(
@@ -147,11 +147,11 @@ public final class ApiDtos {
   ) {}
 
   public record NameRequest(
-    @NotBlank String name,
-    String province,
+    @NotBlank @Size(max = 255) String name,
+    @Size(max = 255) String province,
     Long parentId,
     Boolean active
   ) {}
 
-  public record RejectRequest(@NotBlank String reason) {}
+  public record RejectRequest(@NotBlank @Size(max = 255) String reason) {}
 }

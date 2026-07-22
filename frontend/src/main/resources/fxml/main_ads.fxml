@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.MainAdsController" styleClass="page">
  <top><VBox>
   <HBox alignment="CENTER_LEFT" spacing="8" styleClass="app-header">
-   <HBox alignment="CENTER_LEFT" spacing="0"><Label text="Re:Market" styleClass="wordmark"/><Label text="." styleClass="wordmark-dot"/></HBox><Region HBox.hgrow="ALWAYS"/>
-   <Button text="Sell an item" onAction="#create" styleClass="primary-button"/>
+   <HBox alignment="CENTER_LEFT" spacing="9"><Label text="R" styleClass="brand-mark"/><HBox alignment="CENTER_LEFT" spacing="0"><Label text="Re:Market" styleClass="wordmark"/><Label text="." styleClass="wordmark-dot"/></HBox></HBox>
+   <Region HBox.hgrow="ALWAYS"/>
+   <Button text="＋  Sell" onAction="#create" styleClass="primary-button"/>
    <Button fx:id="myAdsButton" text="My listings" onAction="#myAds" styleClass="nav-button"/>
    <Button fx:id="favoritesButton" text="Saved" onAction="#favorites" styleClass="nav-button"/>
    <Button fx:id="messagesButton" text="Messages" onAction="#conversations" styleClass="nav-button"/>
@@ -16,22 +16,27 @@
    <Button fx:id="loginButton" text="Sign in" onAction="#login" styleClass="secondary-button"/>
    <Button fx:id="logoutButton" text="Log out" onAction="#logout" styleClass="ghost-button"/>
   </HBox>
-  <VBox spacing="7" styleClass="search-hero">
-   <Label text="CURATED SECOND-HAND MARKETPLACE" styleClass="hero-eyebrow"/>
-   <Label text="Find something worth keeping" styleClass="search-title"/>
-   <Label text="Quality second-hand items from people nearby." styleClass="search-subtitle"/>
-   <HBox spacing="8" styleClass="filter-bar">
-    <TextField fx:id="keywordField" promptText="Search listings" HBox.hgrow="ALWAYS" onAction="#search"/>
-    <ComboBox fx:id="categoryBox" prefWidth="170"/><ComboBox fx:id="cityBox" prefWidth="135"/>
-    <TextField fx:id="minPriceField" promptText="Min price" prefWidth="115"/>
-    <TextField fx:id="maxPriceField" promptText="Max price" prefWidth="115"/>
-    <ComboBox fx:id="conditionBox" prefWidth="140"/><ComboBox fx:id="sortBox" prefWidth="130"/>
-    <Button text="Search" onAction="#search" styleClass="accent-button"/>
-   </HBox>
+  <StackPane prefHeight="265" styleClass="search-hero">
+   <Region styleClass="hero-art"/>
+   <Region styleClass="hero-overlay"/>
+   <VBox alignment="CENTER_LEFT" maxWidth="1180" spacing="11" styleClass="hero-copy">
+    <Label text="CURATED SECOND-HAND MARKETPLACE" styleClass="hero-eyebrow"/>
+    <Label text="Find something worth keeping." maxWidth="590" wrapText="true" styleClass="search-title"/>
+    <Label text="Discover quality pieces nearby — thoughtfully listed, clearly described, and ready for their next chapter." maxWidth="570" wrapText="true" styleClass="search-subtitle"/>
+    <HBox spacing="9" styleClass="trust-row"><Label text="✓  Reviewed listings" styleClass="trust-chip"/><Label text="⌖  Shop nearby" styleClass="trust-chip"/><Label text="↻  Give things another life" styleClass="trust-chip"/></HBox>
+   </VBox>
+  </StackPane>
+  <VBox spacing="8" styleClass="search-shell">
+   <HBox alignment="CENTER_LEFT" spacing="8"><Label text="Search the marketplace" styleClass="filter-title"/><Region HBox.hgrow="ALWAYS"/><Label text="Use filters to narrow thousands of possibilities." styleClass="filter-hint"/></HBox>
+   <VBox spacing="8" styleClass="filter-bar">
+    <HBox alignment="CENTER_LEFT" spacing="8"><TextField fx:id="keywordField" promptText="Search by title or description…" HBox.hgrow="ALWAYS" onAction="#search"/><Button fx:id="searchButton" text="Search marketplace" onAction="#search" styleClass="accent-button"/></HBox>
+    <HBox alignment="CENTER_LEFT" spacing="8" styleClass="secondary-filters"><ComboBox fx:id="categoryBox" prefWidth="165" HBox.hgrow="ALWAYS"/><ComboBox fx:id="cityBox" prefWidth="130" HBox.hgrow="ALWAYS"/><TextField fx:id="minPriceField" promptText="Min price" prefWidth="110" HBox.hgrow="ALWAYS" onAction="#search"/><TextField fx:id="maxPriceField" promptText="Max price" prefWidth="110" HBox.hgrow="ALWAYS" onAction="#search"/><ComboBox fx:id="conditionBox" prefWidth="135" HBox.hgrow="ALWAYS"/><ComboBox fx:id="sortBox" prefWidth="130" HBox.hgrow="ALWAYS"/><Button text="Reset" onAction="#clearFilters" styleClass="ghost-button"/></HBox>
+   </VBox>
   </VBox>
  </VBox></top>
- <center><ScrollPane fitToWidth="true"><VBox spacing="14" styleClass="page-content">
-  <HBox alignment="CENTER_LEFT" styleClass="result-toolbar"><Label text="Latest listings" styleClass="section-title"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="resultLabel" styleClass="muted"/></HBox>
-  <TilePane fx:id="adsPane" hgap="16" vgap="16" prefColumns="3"/>
+ <center><ScrollPane fitToWidth="true"><VBox spacing="18" styleClass="market-content">
+  <HBox alignment="CENTER_LEFT" styleClass="result-toolbar"><VBox spacing="3"><Label text="Fresh finds" styleClass="section-title"/><Label text="Recently listed pieces from people in your community." styleClass="muted"/></VBox><Region HBox.hgrow="ALWAYS"/><ProgressIndicator fx:id="loadingIndicator" prefWidth="24" prefHeight="24" visible="false" managed="false"/><Label fx:id="resultLabel" styleClass="result-count"/></HBox>
+  <TilePane fx:id="adsPane" hgap="18" vgap="18" prefColumns="3"/>
+  <VBox fx:id="emptyState" alignment="CENTER" spacing="12" visible="false" managed="false" styleClass="empty-market-state"><Label text="⌕" styleClass="empty-icon"/><Label text="No listings match these filters" styleClass="section-title"/><Label text="Try a broader search, another city, or clear the price range." styleClass="muted"/><Button text="Clear filters" onAction="#clearFilters" styleClass="secondary-button"/></VBox>
  </VBox></ScrollPane></center>
 </BorderPane>

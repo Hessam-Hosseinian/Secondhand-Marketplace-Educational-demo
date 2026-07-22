@@ -110,7 +110,6 @@ public final class NavigationManager {
       scene.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
       scene.getStylesheets().add(css());
       stage.setScene(scene);
-      Animations.enterScene(root);
     } catch (IOException e) {
       throw new IllegalStateException("Could not load " + file, e);
     }

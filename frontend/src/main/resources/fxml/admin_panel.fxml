@@ -2,13 +2,37 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.AdminPanelController" styleClass="page">
- <top><HBox alignment="CENTER_LEFT" styleClass="admin-header"><Button text="Back to marketplace" onAction="#back" styleClass="ghost-light-button"/><Region HBox.hgrow="ALWAYS"/><Label text="Marketplace administration" styleClass="admin-title"/></HBox></top>
- <center><TabPane tabClosingPolicy="UNAVAILABLE" styleClass="admin-tabs">
-  <tabs>
-   <Tab text="Review queue"><ScrollPane fitToWidth="true"><VBox spacing="12" styleClass="page-content"><Label text="Listings awaiting review" styleClass="page-title"/><Label text="Approve complete listings or provide a clear rejection reason." styleClass="muted"/><VBox fx:id="pendingBox" spacing="10"/></VBox></ScrollPane></Tab>
-   <Tab text="Users"><ScrollPane fitToWidth="true"><VBox spacing="12" styleClass="page-content"><Label text="User accounts" styleClass="page-title"/><VBox fx:id="usersBox" spacing="10"/></VBox></ScrollPane></Tab>
-   <Tab text="Categories"><ScrollPane fitToWidth="true"><VBox spacing="12" styleClass="page-content"><Label text="Category structure" styleClass="page-title"/><HBox spacing="10"><TextField fx:id="categoryNameField" promptText="Category name" HBox.hgrow="ALWAYS"/><ComboBox fx:id="parentCategoryBox" prefWidth="220"/><Button text="Add category" onAction="#addCategory" styleClass="primary-button"/></HBox><VBox fx:id="categoriesBox" spacing="8"/></VBox></ScrollPane></Tab>
-   <Tab text="Cities"><ScrollPane fitToWidth="true"><VBox spacing="12" styleClass="page-content"><Label text="Service locations" styleClass="page-title"/><HBox spacing="10"><TextField fx:id="cityNameField" promptText="City" HBox.hgrow="ALWAYS"/><TextField fx:id="provinceField" promptText="Province" HBox.hgrow="ALWAYS"/><Button text="Add city" onAction="#addCity" styleClass="primary-button"/></HBox><VBox fx:id="citiesBox" spacing="8"/></VBox></ScrollPane></Tab>
-  </tabs>
- </TabPane></center>
+ <top><VBox>
+  <HBox alignment="CENTER_LEFT" spacing="10" styleClass="app-header">
+   <Button text="←  Marketplace" onAction="#back" styleClass="ghost-button"/>
+   <Separator orientation="VERTICAL"/>
+   <HBox alignment="CENTER_LEFT" spacing="8"><Label text="R" styleClass="brand-mark-small"/><HBox alignment="CENTER_LEFT" spacing="0"><Label text="Re:Market" styleClass="wordmark"/><Label text="." styleClass="wordmark-dot"/></HBox></HBox>
+   <Region HBox.hgrow="ALWAYS"/>
+   <Label text="ADMIN CONSOLE" styleClass="admin-console-badge"/>
+  </HBox>
+  <VBox spacing="16" styleClass="admin-overview">
+   <HBox alignment="CENTER_LEFT" spacing="16">
+    <VBox spacing="4"><Label text="Marketplace control center" styleClass="admin-dashboard-title"/><Label text="Review submissions, protect the community, and organize marketplace data." styleClass="muted"/></VBox>
+    <Region HBox.hgrow="ALWAYS"/>
+    <VBox alignment="CENTER_RIGHT" spacing="5"><Button fx:id="refreshButton" text="↻  Refresh data" onAction="#refresh" styleClass="secondary-button"/><Label fx:id="adminStatusLabel" text="Loading marketplace data…" styleClass="admin-sync-label"/></VBox>
+   </HBox>
+   <HBox spacing="12" styleClass="admin-stats">
+    <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS" spacing="3" styleClass="admin-stat-card, review-stat"><HBox alignment="CENTER_LEFT"><Label text="Review queue" styleClass="admin-stat-title"/><Region HBox.hgrow="ALWAYS"/><Label text="◷" styleClass="admin-stat-icon"/></HBox><Label fx:id="pendingCountLabel" text="—" styleClass="admin-stat-value"/><Label text="Awaiting a decision" styleClass="admin-stat-caption"/></VBox>
+    <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS" spacing="3" styleClass="admin-stat-card"><HBox alignment="CENTER_LEFT"><Label text="Users" styleClass="admin-stat-title"/><Region HBox.hgrow="ALWAYS"/><Label text="◎" styleClass="admin-stat-icon"/></HBox><Label fx:id="usersCountLabel" text="—" styleClass="admin-stat-value"/><Label text="Registered accounts" styleClass="admin-stat-caption"/></VBox>
+    <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS" spacing="3" styleClass="admin-stat-card"><HBox alignment="CENTER_LEFT"><Label text="Categories" styleClass="admin-stat-title"/><Region HBox.hgrow="ALWAYS"/><Label text="◇" styleClass="admin-stat-icon"/></HBox><Label fx:id="categoriesCountLabel" text="—" styleClass="admin-stat-value"/><Label text="Active catalog entries" styleClass="admin-stat-caption"/></VBox>
+    <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS" spacing="3" styleClass="admin-stat-card"><HBox alignment="CENTER_LEFT"><Label text="Cities" styleClass="admin-stat-title"/><Region HBox.hgrow="ALWAYS"/><Label text="⌖" styleClass="admin-stat-icon"/></HBox><Label fx:id="citiesCountLabel" text="—" styleClass="admin-stat-value"/><Label text="Service locations" styleClass="admin-stat-caption"/></VBox>
+   </HBox>
+  </VBox>
+ </VBox></top>
+ <center><StackPane>
+  <TabPane fx:id="adminTabPane" tabClosingPolicy="UNAVAILABLE" styleClass="admin-tabs">
+   <tabs>
+    <Tab text="Review queue"><ScrollPane fitToWidth="true"><VBox spacing="16" styleClass="admin-page-content"><HBox alignment="CENTER_LEFT"><VBox spacing="3"><Label text="Listings awaiting review" styleClass="page-title"/><Label text="Check the listing details, then approve it or send clear feedback to the seller." styleClass="muted"/></VBox><Region HBox.hgrow="ALWAYS"/><Label text="MODERATION" styleClass="section-kicker"/></HBox><VBox fx:id="pendingBox" spacing="10"/></VBox></ScrollPane></Tab>
+    <Tab text="Users"><ScrollPane fitToWidth="true"><VBox spacing="16" styleClass="admin-page-content"><HBox alignment="CENTER_LEFT"><VBox spacing="3"><Label text="User accounts" styleClass="page-title"/><Label text="Review account status and keep marketplace access safe." styleClass="muted"/></VBox><Region HBox.hgrow="ALWAYS"/><Label text="COMMUNITY" styleClass="section-kicker"/></HBox><VBox fx:id="usersBox" spacing="10"/></VBox></ScrollPane></Tab>
+    <Tab text="Categories"><ScrollPane fitToWidth="true"><VBox spacing="16" styleClass="admin-page-content"><HBox alignment="CENTER_LEFT"><VBox spacing="3"><Label text="Category structure" styleClass="page-title"/><Label text="Create clear top-level categories and focused subcategories." styleClass="muted"/></VBox><Region HBox.hgrow="ALWAYS"/><Label text="CATALOG" styleClass="section-kicker"/></HBox><HBox alignment="CENTER_LEFT" spacing="10" styleClass="admin-create-panel"><VBox HBox.hgrow="ALWAYS" spacing="5"><Label text="Category name" styleClass="field-label"/><TextField fx:id="categoryNameField" promptText="e.g. Musical instruments" onAction="#addCategory"/></VBox><VBox spacing="5"><Label text="Parent" styleClass="field-label"/><ComboBox fx:id="parentCategoryBox" prefWidth="240"/></VBox><Button text="＋  Add category" onAction="#addCategory" styleClass="primary-button"/></HBox><VBox fx:id="categoriesBox" spacing="8"/></VBox></ScrollPane></Tab>
+    <Tab text="Cities"><ScrollPane fitToWidth="true"><VBox spacing="16" styleClass="admin-page-content"><HBox alignment="CENTER_LEFT"><VBox spacing="3"><Label text="Service locations" styleClass="page-title"/><Label text="Control the cities where people can list and discover items." styleClass="muted"/></VBox><Region HBox.hgrow="ALWAYS"/><Label text="COVERAGE" styleClass="section-kicker"/></HBox><HBox alignment="CENTER_LEFT" spacing="10" styleClass="admin-create-panel"><VBox HBox.hgrow="ALWAYS" spacing="5"><Label text="City" styleClass="field-label"/><TextField fx:id="cityNameField" promptText="e.g. Shiraz" onAction="#addCity"/></VBox><VBox HBox.hgrow="ALWAYS" spacing="5"><Label text="Province" styleClass="field-label"/><TextField fx:id="provinceField" promptText="e.g. Fars" onAction="#addCity"/></VBox><Button text="＋  Add city" onAction="#addCity" styleClass="primary-button"/></HBox><VBox fx:id="citiesBox" spacing="8"/></VBox></ScrollPane></Tab>
+   </tabs>
+  </TabPane>
+  <VBox fx:id="adminLoading" alignment="CENTER" spacing="10" styleClass="admin-loading"><ProgressIndicator prefWidth="42" prefHeight="42"/><Label text="Syncing admin workspace…" styleClass="muted"/></VBox>
+ </StackPane></center>
 </BorderPane>

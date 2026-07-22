@@ -53,6 +53,10 @@ public class ApiClient {
         HttpRequest.BodyPublishers.ofFile(file.toPath()),
         HttpRequest.BodyPublishers.ofString(tail)
       );
+      if (!SessionManager.loggedIn()) throw new ApiException(
+        401,
+        "Please log in before uploading an image."
+      );
       HttpRequest request = HttpRequest.newBuilder(
         URI.create(ApiConfig.BASE_URL + "/api/images/upload")
       )
@@ -65,6 +69,13 @@ public class ApiClient {
         request,
         HttpResponse.BodyHandlers.ofString()
       );
+      if (response.statusCode() == 401) {
+        SessionManager.clear();
+        throw new ApiException(
+          401,
+          "Your session expired. Please log in again."
+        );
+      }
       if (response.statusCode() < 200 || response.statusCode() >= 300) {
         String message;
         try {
@@ -74,13 +85,13 @@ public class ApiClient {
         } catch (Exception ignored) {
           message = "Image upload failed";
         }
-        throw new ApiException(message);
+        throw new ApiException(response.statusCode(), message);
       }
       return JSON.readTree(response.body());
     } catch (ApiException e) {
       throw e;
     } catch (Exception e) {
-      throw new ApiException("Could not upload the selected image");
+      throw new ApiException(0, "Could not upload the selected image");
     }
   }
 
@@ -106,7 +117,10 @@ public class ApiClient {
       );
       if (r.statusCode() == 401) {
         SessionManager.clear();
-        throw new ApiException("Your session expired. Please log in again.");
+        throw new ApiException(
+          401,
+          "Your session expired. Please log in again."
+        );
       }
       if (r.statusCode() < 200 || r.statusCode() >= 300) {
         String message;
@@ -117,7 +131,7 @@ public class ApiClient {
         } catch (Exception x) {
           message = "Request failed (" + r.statusCode() + ")";
         }
-        throw new ApiException(message);
+        throw new ApiException(r.statusCode(), message);
       }
       return r.body().isBlank()
         ? JSON.createObjectNode()
@@ -126,6 +140,7 @@ public class ApiClient {
       throw e;
     } catch (Exception e) {
       throw new ApiException(
+        0,
         "Cannot connect to backend at " + ApiConfig.BASE_URL
       );
     }
@@ -133,8 +148,15 @@ public class ApiClient {
 
   public static class ApiException extends RuntimeException {
 
-    public ApiException(String m) {
+    private final int statusCode;
+
+    public ApiException(int statusCode, String m) {
       super(m);
+      this.statusCode = statusCode;
+    }
+
+    public int statusCode() {
+      return statusCode;
     }
   }
 }

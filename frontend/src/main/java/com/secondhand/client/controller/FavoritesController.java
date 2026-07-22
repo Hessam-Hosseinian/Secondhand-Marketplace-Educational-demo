@@ -50,7 +50,6 @@ public class FavoritesController extends BaseController {
         Animations.hoverLift(row);
         listBox.getChildren().add(row);
       }
-      Animations.stagger(listBox.getChildren());
     });
   }
 

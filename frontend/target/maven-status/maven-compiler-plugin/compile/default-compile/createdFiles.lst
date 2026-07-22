@@ -4,11 +4,13 @@ com/secondhand/client/app/MainApp.class
 com/secondhand/client/app/NavigationManager.class
 com/secondhand/client/controller/RatingDialogController.class
 com/secondhand/client/api/ApiConfig.class
+com/secondhand/client/app/Animations.class
 com/secondhand/client/controller/RegisterController.class
 com/secondhand/client/controller/FavoritesController.class
 com/secondhand/client/auth/SessionManager.class
 com/secondhand/client/util/DialogUtils.class
 com/secondhand/client/api/ApiClient$ApiException.class
+com/secondhand/client/controller/AdminPanelController$AdminData.class
 com/secondhand/client/controller/AdDetailsController.class
 com/secondhand/client/controller/AdminPanelController.class
 com/secondhand/client/controller/BaseController.class

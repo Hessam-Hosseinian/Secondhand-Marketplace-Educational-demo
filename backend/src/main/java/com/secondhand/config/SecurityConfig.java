@@ -4,6 +4,7 @@ import com.secondhand.security.JwtFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import org.springframework.context.annotation.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,9 +32,10 @@ public class SecurityConfig {
       )
       .authorizeHttpRequests(a ->
         a
+          .requestMatchers("/api/auth/register", "/api/auth/login")
+          .permitAll()
           .requestMatchers(
-            "/api/auth/register",
-            "/api/auth/login",
+            HttpMethod.GET,
             "/api/ads",
             "/api/ads/*",
             "/api/categories",

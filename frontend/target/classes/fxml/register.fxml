@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.secondhand.client.controller.RegisterController" styleClass="auth-background">
- <VBox prefWidth="560" maxWidth="560" spacing="11" styleClass="surface">
+ <VBox prefWidth="560" maxWidth="560" prefHeight="540" maxHeight="540"  spacing="11" styleClass="surface">
   <Label text="Create your account" styleClass="auth-title"/>
   <Label text="One account for buying, selling, and messaging." styleClass="muted"/>
   <Label text="Full name" styleClass="field-label"/><TextField fx:id="fullNameField" promptText="Your full name"/>

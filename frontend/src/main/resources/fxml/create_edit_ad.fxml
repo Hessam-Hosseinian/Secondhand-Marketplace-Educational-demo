@@ -12,7 +12,7 @@
    <HBox spacing="12"><VBox spacing="6" HBox.hgrow="ALWAYS"><Label text="Category *" styleClass="field-label"/><ComboBox fx:id="mainCategoryBox" onAction="#mainChanged" maxWidth="Infinity"/></VBox><VBox spacing="6" HBox.hgrow="ALWAYS"><Label text="Subcategory *" styleClass="field-label"/><ComboBox fx:id="subcategoryBox" onAction="#subcategoryChanged" maxWidth="Infinity"/></VBox><VBox spacing="6" HBox.hgrow="ALWAYS"><Label text="City *" styleClass="field-label"/><ComboBox fx:id="cityBox" maxWidth="Infinity"/></VBox></HBox>
    <VBox fx:id="dynamicAttributesBox" spacing="10" styleClass="attribute-grid"/>
    <HBox><VBox spacing="5"><Label text="Photos" styleClass="field-label"/><Label text="Select one or more JPG, PNG, WEBP, or GIF images." styleClass="muted"/></VBox><Region HBox.hgrow="ALWAYS"/><Button text="Add photos" onAction="#chooseImages" styleClass="secondary-button"/></HBox>
-   <ListView fx:id="imageList" prefHeight="100"/>
+   <ListView fx:id="imageList" prefHeight="100"/><HBox alignment="CENTER_RIGHT"><Button text="Remove selected photo" onAction="#removeImage" styleClass="ghost-button"/></HBox>
    <Label text="Additional details" styleClass="field-label"/><TextArea fx:id="attributesArea" promptText="Color, dimensions, accessories, or anything else buyers should know" prefRowCount="3" wrapText="true"/>
    <Label fx:id="errorLabel" styleClass="error-text"/><HBox alignment="CENTER_RIGHT" spacing="10"><Button text="Cancel" onAction="#cancel" styleClass="secondary-button"/><Button text="Submit for review" onAction="#submit" styleClass="primary-button"/></HBox>
   </VBox>

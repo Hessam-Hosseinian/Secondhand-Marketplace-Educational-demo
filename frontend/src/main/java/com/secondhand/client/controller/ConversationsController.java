@@ -48,7 +48,6 @@ public class ConversationsController extends BaseController {
         Animations.hoverLift(row);
         listBox.getChildren().add(row);
       }
-      Animations.stagger(listBox.getChildren());
     });
   }
 

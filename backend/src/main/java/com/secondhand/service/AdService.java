@@ -46,6 +46,15 @@ public class AdService {
     String cond,
     String sort
   ) {
+    if (min != null && min.signum() < 0) throw ApiException.bad(
+      "Minimum price cannot be negative"
+    );
+    if (max != null && max.signum() < 0) throw ApiException.bad(
+      "Maximum price cannot be negative"
+    );
+    if (
+      min != null && max != null && min.compareTo(max) > 0
+    ) throw ApiException.bad("Minimum price cannot exceed maximum price");
     Enums.ItemCondition condition =
       cond == null || cond.isBlank() ? null : parseCondition(cond);
     Sort s = "cheapest".equals(sort)
@@ -86,7 +95,13 @@ public class AdService {
       a.getStatus() == Enums.AdStatus.DELETED ||
       a.getStatus() == Enums.AdStatus.SOLD
     ) throw ApiException.bad("This advertisement cannot be edited");
-    apply(a, r, activeCategory(r.categoryId()));
+    Category category = activeCategory(r.categoryId());
+    if (
+      !a.getCategory().getId().equals(category.getId())
+    ) throw ApiException.bad(
+      "The category of an existing advertisement cannot be changed"
+    );
+    apply(a, r, category);
     a.setStatus(Enums.AdStatus.PENDING);
     a.setRejectionReason(null);
     return mapper.ad(a);
@@ -144,13 +159,8 @@ public class AdService {
     a.setCity(city);
     a.setAttributesText(r.attributesText());
     applyAttributes(a, c, r.attributes());
-    List<String> imageUrls = r.imageUrls() == null
-      ? List.of()
-      : r.imageUrls().stream().filter(x -> x != null && !x.isBlank()).toList();
-    if (imageUrls.isEmpty() && r.imageUrl() != null && !r.imageUrl().isBlank()) {
-      imageUrls = List.of(r.imageUrl());
-    }
-    if (!imageUrls.isEmpty()) {
+    if (r.imageUrls() != null) {
+      List<String> imageUrls = r.imageUrls();
       a.getImages().clear();
       for (int order = 0; order < imageUrls.size(); order++) {
         AdvertisementImage image = new AdvertisementImage();
@@ -159,11 +169,19 @@ public class AdService {
         image.setSortOrder(order);
         a.getImages().add(image);
       }
+    } else if (r.imageUrl() != null && !r.imageUrl().isBlank()) {
+      a.getImages().clear();
+      AdvertisementImage image = new AdvertisementImage();
+      image.setAdvertisement(a);
+      image.setImageUrl(r.imageUrl().trim());
+      image.setSortOrder(0);
+      a.getImages().add(image);
     }
   }
 
   private Category activeCategory(Long id) {
-    return cats.findById(id)
+    return cats
+      .findById(id)
       .filter(Category::isActive)
       .orElseThrow(() -> ApiException.bad("Invalid category"));
   }
@@ -174,6 +192,16 @@ public class AdService {
     Map<String, String> values
   ) {
     Map<String, String> safeValues = values == null ? Map.of() : values;
+    for (Map.Entry<String, String> entry : safeValues.entrySet()) {
+      if (
+        entry.getKey() == null || entry.getKey().length() > 255
+      ) throw ApiException.bad("Invalid attribute key");
+      if (
+        entry.getValue() != null && entry.getValue().length() > 1000
+      ) throw ApiException.bad(
+        "Attribute values must be at most 1000 characters"
+      );
+    }
     List<CategoryAttribute> definitions =
       categoryAttributes.findByCategoryIdOrderBySortOrder(category.getId());
     for (CategoryAttribute definition : definitions) {

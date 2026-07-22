@@ -28,7 +28,6 @@ public class MyAdsController extends BaseController {
       countLabel.setText(ads.size() + (ads.size() == 1 ? " listing" : " listings"));
       listBox.getChildren().clear();
       for (JsonNode ad : ads) listBox.getChildren().add(row(ad));
-      Animations.stagger(listBox.getChildren());
     });
   }
 
@@ -44,12 +43,13 @@ public class MyAdsController extends BaseController {
       .getChildren()
       .add(new Label("Rejection reason: " + ad.path("rejectionReason").asText()));
     Button edit = UiFactory.action("Edit", () -> NavigationManager.adForm(ad));
-    Button sold = UiFactory.action("Mark sold", () ->
+    Button sold = UiFactory.action("Mark sold", () -> {
+      if (!DialogUtils.confirm("Mark this listing as sold?")) return;
       safe(() -> {
         api.put("/api/ads/" + id + "/sold", Map.of());
         refresh();
-      })
-    );
+      });
+    });
     sold.setDisable(!"ACTIVE".equals(status));
     edit.setDisable("SOLD".equals(status) || "DELETED".equals(status));
     HBox row = UiFactory.row();
@@ -60,11 +60,18 @@ public class MyAdsController extends BaseController {
       edit,
       sold,
       UiFactory.action("Delete", () ->
-        safe(() -> {
-          api.delete("/api/ads/" + id);
-          DialogUtils.info("Listing deleted.");
-          refresh();
-        })
+        {
+          if (
+            !DialogUtils.confirm(
+              "Delete this listing? This action cannot be undone."
+            )
+          ) return;
+          safe(() -> {
+            api.delete("/api/ads/" + id);
+            DialogUtils.info("Listing deleted.");
+            refresh();
+          });
+        }
       )
     );
     Animations.hoverLift(row);
