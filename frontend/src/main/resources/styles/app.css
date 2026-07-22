@@ -1693,3 +1693,330 @@
   -fx-border-radius: 17;
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.38), 24, 0, 0, 9);
 }
+
+/* ---------- listing creation and seller workspace ---------- */
+
+.listing-editor-badge {
+  -fx-background-color: rgba(20, 166, 232, 0.10);
+  -fx-background-radius: 30;
+  -fx-border-color: rgba(82, 202, 250, 0.30);
+  -fx-border-radius: 30;
+  -fx-padding: 6 11;
+  -fx-text-fill: #8fe4ff;
+  -fx-font-size: 10px;
+  -fx-font-weight: 900;
+}
+
+.listing-page-content,
+.my-listings-content {
+  -fx-padding: 27 30 52 30;
+  -fx-background-color: linear-gradient(to bottom, #091722, -bg);
+}
+
+.listing-intro {
+  -fx-padding: 0 0 3 0;
+}
+
+.listing-page-title {
+  -fx-font-size: 28px;
+  -fx-font-weight: 900;
+  -fx-text-fill: -ink;
+}
+
+.listing-steps {
+  -fx-padding: 9 12;
+  -fx-background-color: rgba(20, 38, 56, 0.82);
+  -fx-background-radius: 30;
+  -fx-border-color: rgba(65, 161, 211, 0.25);
+  -fx-border-radius: 30;
+}
+
+.step-number,
+.step-number-active {
+  -fx-alignment: center;
+  -fx-min-width: 24;
+  -fx-min-height: 24;
+  -fx-background-radius: 20;
+  -fx-font-size: 10px;
+  -fx-font-weight: 900;
+}
+
+.step-number {
+  -fx-background-color: -surface-3;
+  -fx-text-fill: -muted;
+}
+
+.step-number-active {
+  -fx-background-color: -brand;
+  -fx-text-fill: white;
+}
+
+.step-label,
+.step-divider {
+  -fx-font-size: 10.5px;
+  -fx-font-weight: 700;
+  -fx-text-fill: -muted;
+}
+
+.step-divider {
+  -fx-text-fill: -line-soft;
+}
+
+.listing-section {
+  -fx-padding: 20;
+  -fx-background-color: rgba(20, 38, 56, 0.88);
+  -fx-background-radius: 17;
+  -fx-border-color: rgba(69, 172, 224, 0.30);
+  -fx-border-radius: 17;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.20), 16, 0, 0, 6);
+}
+
+.section-number {
+  -fx-alignment: center;
+  -fx-min-width: 34;
+  -fx-min-height: 34;
+  -fx-background-color: linear-gradient(to bottom right, #20bff5, #087db8);
+  -fx-background-radius: 11;
+  -fx-text-fill: white;
+  -fx-font-size: 14px;
+  -fx-font-weight: 900;
+  -fx-translate-x: -7;
+}
+
+.listing-section-title {
+  -fx-font-size: 17px;
+  -fx-font-weight: 900;
+  -fx-text-fill: -ink;
+}
+
+.field-counter {
+  -fx-font-size: 10px;
+  -fx-text-fill: -muted;
+}
+
+.listing-specifications {
+  -fx-padding: 14;
+  -fx-background-color: rgba(7, 19, 29, 0.48);
+  -fx-background-radius: 13;
+  -fx-border-color: rgba(69, 172, 224, 0.20);
+  -fx-border-radius: 13;
+}
+
+.specification-field {
+  -fx-padding: 2 0;
+}
+
+.photo-upload-zone {
+  -fx-padding: 13 14;
+  -fx-background-color: rgba(20, 166, 232, 0.06);
+  -fx-background-radius: 13;
+  -fx-border-color: rgba(71, 187, 235, 0.28);
+  -fx-border-radius: 13;
+  -fx-border-style: segments(8, 5);
+}
+
+.photo-count-label {
+  -fx-padding: 5 9;
+  -fx-background-color: -surface-2;
+  -fx-background-radius: 20;
+  -fx-text-fill: -ink-2;
+  -fx-font-size: 10.5px;
+  -fx-font-weight: 800;
+}
+
+.photo-empty-state {
+  -fx-alignment: center;
+  -fx-max-width: infinity;
+  -fx-padding: 26 20;
+  -fx-background-color: rgba(7, 19, 29, 0.42);
+  -fx-background-radius: 13;
+  -fx-text-fill: -muted;
+  -fx-font-size: 12px;
+}
+
+.photo-preview-list {
+  -fx-padding: 6;
+  -fx-background-color: rgba(7, 19, 29, 0.42);
+  -fx-background-radius: 13;
+  -fx-border-color: transparent;
+}
+
+.photo-preview-list .list-cell {
+  -fx-padding: 4;
+  -fx-background-color: transparent;
+}
+
+.photo-preview-list .list-cell:selected {
+  -fx-background-color: rgba(20, 166, 232, 0.14);
+  -fx-background-radius: 12;
+}
+
+.photo-preview-tile {
+  -fx-padding: 5;
+  -fx-background-color: -surface-2;
+  -fx-background-radius: 12;
+  -fx-border-color: rgba(70, 168, 216, 0.25);
+  -fx-border-radius: 12;
+}
+
+.cover-photo-label,
+.photo-position-label {
+  -fx-font-size: 9.5px;
+  -fx-font-weight: 800;
+}
+
+.cover-photo-label {
+  -fx-text-fill: -gold;
+}
+
+.photo-position-label {
+  -fx-text-fill: -muted;
+}
+
+.photo-remove-button {
+  -fx-min-width: 24;
+  -fx-min-height: 24;
+  -fx-padding: 0;
+  -fx-background-color: rgba(238, 84, 84, 0.10);
+  -fx-border-color: rgba(238, 84, 84, 0.25);
+  -fx-background-radius: 20;
+  -fx-border-radius: 20;
+  -fx-text-fill: #ffc7c2;
+}
+
+.photo-remove-button:hover {
+  -fx-background-color: #a72b2b;
+  -fx-text-fill: white;
+}
+
+.listing-submit-panel {
+  -fx-padding: 15 17;
+  -fx-background-color: rgba(13, 48, 68, 0.72);
+  -fx-background-radius: 15;
+  -fx-border-color: rgba(61, 188, 239, 0.35);
+  -fx-border-radius: 15;
+}
+
+.listing-side-card,
+.listing-safety-card {
+  -fx-padding: 18;
+  -fx-background-color: rgba(20, 38, 56, 0.82);
+  -fx-background-radius: 15;
+  -fx-border-color: rgba(69, 172, 224, 0.25);
+  -fx-border-radius: 15;
+}
+
+.review-side-card {
+  -fx-background-color: rgba(13, 61, 84, 0.60);
+  -fx-border-color: rgba(69, 188, 235, 0.34);
+}
+
+.listing-safety-card {
+  -fx-background-color: rgba(247, 201, 72, 0.06);
+  -fx-border-color: rgba(247, 201, 72, 0.22);
+}
+
+.listing-side-title {
+  -fx-font-size: 15px;
+  -fx-font-weight: 900;
+  -fx-text-fill: -ink;
+}
+
+.checklist-item {
+  -fx-font-size: 11.5px;
+  -fx-text-fill: -ink-2;
+}
+
+.form-loading {
+  -fx-padding: 24;
+  -fx-background-color: rgba(7, 19, 29, 0.96);
+  -fx-background-radius: 17;
+  -fx-border-color: rgba(74, 185, 235, 0.38);
+  -fx-border-radius: 17;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.38), 24, 0, 0, 9);
+}
+
+.seller-stat-card {
+  -fx-padding: 13 16;
+  -fx-background-color: rgba(20, 38, 56, 0.88);
+  -fx-background-radius: 14;
+  -fx-border-color: rgba(79, 157, 199, 0.24);
+  -fx-border-radius: 14;
+}
+
+.active-seller-stat {
+  -fx-background-color: rgba(18, 71, 51, 0.62);
+  -fx-border-color: rgba(34, 197, 94, 0.30);
+}
+
+.attention-seller-stat {
+  -fx-background-color: rgba(85, 54, 18, 0.52);
+  -fx-border-color: rgba(247, 201, 72, 0.28);
+}
+
+.seller-stat-value {
+  -fx-font-size: 24px;
+  -fx-font-weight: 900;
+  -fx-text-fill: -ink;
+}
+
+.my-listings-toolbar {
+  -fx-padding: 14 16;
+  -fx-background-color: rgba(20, 38, 56, 0.74);
+  -fx-background-radius: 14;
+  -fx-border-color: rgba(69, 172, 224, 0.22);
+  -fx-border-radius: 14;
+}
+
+.my-listing-row {
+  -fx-padding: 11 13;
+  -fx-spacing: 14;
+  -fx-alignment: center-left;
+}
+
+.my-listing-price {
+  -fx-font-size: 16px;
+  -fx-font-weight: 900;
+  -fx-text-fill: -ink;
+}
+
+.my-listing-status {
+  -fx-padding: 4 8;
+  -fx-background-radius: 20;
+  -fx-border-radius: 20;
+  -fx-font-size: 10px;
+  -fx-font-weight: 900;
+}
+
+.listing-status-active {
+  -fx-background-color: rgba(34, 197, 94, 0.12);
+  -fx-border-color: rgba(34, 197, 94, 0.30);
+  -fx-text-fill: #8dffb4;
+}
+
+.listing-status-pending {
+  -fx-background-color: rgba(20, 166, 232, 0.11);
+  -fx-border-color: rgba(20, 166, 232, 0.30);
+  -fx-text-fill: #9de8ff;
+}
+
+.listing-status-rejected {
+  -fx-background-color: rgba(247, 201, 72, 0.11);
+  -fx-border-color: rgba(247, 201, 72, 0.30);
+  -fx-text-fill: #ffe385;
+}
+
+.listing-status-sold,
+.listing-status-deleted {
+  -fx-background-color: rgba(181, 202, 217, 0.08);
+  -fx-border-color: rgba(181, 202, 217, 0.20);
+  -fx-text-fill: -muted;
+}
+
+.listing-rejection-note {
+  -fx-padding: 7 9;
+  -fx-background-color: rgba(247, 201, 72, 0.07);
+  -fx-background-radius: 9;
+  -fx-text-fill: #ffe6a0;
+  -fx-font-size: 10.5px;
+}

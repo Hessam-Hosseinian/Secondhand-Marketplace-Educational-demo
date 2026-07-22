@@ -10,6 +10,10 @@ A complete desktop second-hand marketplace built with Java, Spring Boot, JavaFX,
 
 ![Marketplace screen](docs/screenshots/marketplace.png)
 
+### My listings
+
+![Seller listings dashboard](docs/screenshots/image.png)
+
 ### Conversations
 
 ![Conversation screen](docs/screenshots/conversations.png)
